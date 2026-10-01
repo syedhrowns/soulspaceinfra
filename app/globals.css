@@ -1,0 +1,665 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@layer base {
+  :root {
+    --font-serif: "Cormorant Garamond", var(--font-cormorant), Georgia, serif;
+    --font-sans: "Plus Jakarta Sans", var(--font-jakarta), -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  html {
+    font-family: "Plus Jakarta Sans", var(--font-jakarta), sans-serif;
+  }
+
+  body {
+    background-color: #FAF7F2;
+    color: #1D1814;
+    font-family: "Plus Jakarta Sans", var(--font-jakarta), sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  img, picture, video, canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.font-serif {
+  font-family: "Cormorant Garamond", var(--font-cormorant), Georgia, serif !important;
+}
+
+.font-sans {
+  font-family: "Plus Jakarta Sans", var(--font-jakarta), -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* Pure Glass Blur Surface Classes with Rich Gold Accents */
+.glassmorphic-header {
+  background-color: rgba(247, 244, 237, 0.48) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+header,
+header * {
+  outline: none !important;
+}
+
+.glass-panel-light {
+  background: rgba(250, 247, 242, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid #D8C7B3;
+  box-shadow: none;
+}
+
+.glass-panel-dark {
+  background: rgba(22, 19, 16, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(197, 168, 128, 0.2);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.glass-card-warm {
+  background: rgba(245, 239, 230, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid #D8C7B3;
+  box-shadow: none;
+}
+
+.glass-pill {
+  background: #FAF8F4;
+  border: 1px solid #D8C7B3;
+  box-shadow: none;
+}
+
+.glass-pill-dark {
+  background: rgba(22, 19, 16, 0.8);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(197, 168, 128, 0.25);
+  box-shadow: none;
+}
+
+/* Hide scrollbars globally across all browsers */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Subtle architectural grid pattern with gold tint */
+.bg-grid-architectural {
+  background-size: 64px 64px;
+  background-image: 
+    linear-gradient(to right, rgba(158, 123, 79, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(158, 123, 79, 0.08) 1px, transparent 1px);
+}
+
+.bg-blueprint-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(158, 123, 79, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(158, 123, 79, 0.12) 1px, transparent 1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 30s linear infinite;
+}
+
+/* Hide Next.js dev indicator badge */
+nextjs-portal,
+#nextjs-dev-overlay,
+[data-nextjs-toast-wrapper],
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+.animate-shimmer {
+  background-size: 300% 100%;
+  animation: shimmer 5s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Single Continuous Uniform Light Glide Animation
+   A single beam of luxury champagne gold light sweeps across the brand lockup,
+   passing through the logo mark, crossing into the typography, and gliding
+   completely through INFRASTRUCTURE in ONE single uniform animation cycle (2.6s).
+
+   Seamless Infinite Loop:
+   Period W = 1200px.
+   Background-size = 1200px 100%.
+   Logo travel: -740px to +460px (Delta = 1200px = 1 exact period).
+   Text travel: -812px to +388px (Delta = 1200px = 1 exact period).
+   At 100%, background-position is mathematically identical to 0% (modulo 1200px).
+   This guarantees a 100% glitch-free, zero-lag, silky smooth seamless loop!
+   ========================================================================== */
+
+@keyframes unifiedSingleBeamLogo {
+  0% {
+    background-position: -740px 0;
+  }
+  100% {
+    background-position: 460px 0;
+  }
+}
+
+@keyframes unifiedSingleBeamText {
+  0% {
+    background-position: -812px 0;
+  }
+  100% {
+    background-position: 388px 0;
+  }
+}
+
+/* Light Mode Typography */
+.animate-flow-light-glide,
+.animate-unified-flow-text {
+  background: linear-gradient(
+    115deg,
+    #1D1814 0%,
+    #1D1814 41%,
+    #9E7B4F 44.5%,
+    #C5A880 47.5%,
+    #F7E9CF 50%,
+    #C5A880 52.5%,
+    #9E7B4F 55.5%,
+    #1D1814 59%,
+    #1D1814 100%
+  );
+  background-size: 1200px 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: unifiedSingleBeamText 0.8s linear infinite;
+}
+
+.animate-flow-light-glide span,
+.animate-unified-flow-text span {
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Light Mode Logo Mark - Transparent Light Beam (Never darkens or obscures the gold border) */
+.animate-flow-light-glide-mask,
+.animate-unified-flow-mark {
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(222, 191, 136, 0.45) 46%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(222, 191, 136, 0.45) 54%,
+    transparent 58%,
+    transparent 100%
+  );
+  background-size: 1200px 100%;
+  background-repeat: repeat-x;
+  animation: unifiedSingleBeamLogo 0.8s linear infinite;
+  -webkit-mask-image: url('/brand/logo-mark.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('/brand/logo-mark.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  pointer-events: none;
+}
+
+/* Dark Mode Typography */
+.animate-flow-light-glide-dark,
+.animate-unified-flow-text-dark {
+  background: linear-gradient(
+    115deg,
+    #FAF8F5 0%,
+    #FAF8F5 41%,
+    #C5A880 44.5%,
+    #F7E9CF 47.5%,
+    #FFFFFF 50%,
+    #F7E9CF 52.5%,
+    #C5A880 55.5%,
+    #FAF8F5 59%,
+    #FAF8F5 100%
+  );
+  background-size: 1200px 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: unifiedSingleBeamText 0.8s linear infinite;
+}
+
+.animate-flow-light-glide-dark span,
+.animate-unified-flow-text-dark span {
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Dark Mode Logo Mark - Transparent Light Beam */
+.animate-flow-light-glide-mask-dark,
+.animate-unified-flow-mark-dark {
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(222, 191, 136, 0.45) 46%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(222, 191, 136, 0.45) 54%,
+    transparent 58%,
+    transparent 100%
+  );
+  background-size: 1200px 100%;
+  background-repeat: repeat-x;
+  animation: unifiedSingleBeamLogo 0.8s linear infinite;
+  -webkit-mask-image: url('/brand/logo-mark-dark.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('/brand/logo-mark-dark.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  pointer-events: none;
+}
+
+/* Universal button transition behavior - zero transform movement */
+button,
+[role="button"] {
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Strict Zero Movement Rule on hover for all logos, brand marks, and icons across the entire website */
+#brand-home-link,
+#brand-home-link-scrolled,
+#project-brand-logo-link {
+  transform: none;
+  scale: none;
+  translate: none;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#brand-home-link:hover,
+#brand-home-link-scrolled:hover,
+#project-brand-logo-link:hover,
+.group:hover svg,
+.group:hover .lucide,
+.group:hover img,
+button:hover > svg,
+button:hover > .lucide,
+a:hover > svg,
+a:hover > .lucide {
+  transform: none;
+  scale: none;
+  translate: none;
+}
+
+/* Ensure logo images and wrappers are completely transparent with no background */
+img[src*="logo"],
+img[alt*="Logo"],
+img[alt*="logo"],
+[class*="BrandLogo"],
+#brand-home-link,
+#brand-home-link-scrolled,
+#project-brand-logo-link {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Logo & Logo Text Transit Motion Blur Animation
+   The brand logo icon and typography experience optical motion blur STRICTLY
+   while actively in motion between the corner and center. When at rest,
+   the filter is immediately cleared to zero blur (filter: none).
+   ========================================================================== */
+
+@keyframes logoTransitBlurDown {
+  0% {
+    filter: blur(0px);
+  }
+  20% {
+    filter: blur(1px);
+  }
+  50% {
+    filter: blur(4.5px);
+  }
+  80% {
+    filter: blur(1.5px);
+  }
+  100% {
+    filter: blur(0px);
+  }
+}
+
+@keyframes logoTransitBlurUp {
+  0% {
+    filter: blur(0px);
+  }
+  20% {
+    filter: blur(1px);
+  }
+  50% {
+    filter: blur(4.5px);
+  }
+  80% {
+    filter: blur(1.5px);
+  }
+  100% {
+    filter: blur(0px);
+  }
+}
+
+.logo-blur-moving-down {
+  animation: logoTransitBlurDown 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both !important;
+}
+
+.logo-blur-moving-up {
+  animation: logoTransitBlurUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0s both !important;
+}
+
+.logo-blur-idle {
+  animation: none !important;
+  filter: none !important;
+}
+
+/* ==========================================================================
+   STRICT MOBILE BUTTON & TAP TARGET REFINEMENT (< 768px)
+   Guarantees all interactive elements on mobile screens have comfortable
+   touch targets (minimum 40px-44px), proper circular geometry for icon
+   buttons, and elegant proportions for text action pills.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* Prevent horizontal oval distortion on circular icon-only buttons */
+  button.rounded-full:has(> svg:only-child),
+  a.rounded-full:has(> svg:only-child),
+  button[aria-label*="close" i],
+  button[aria-label*="Close" i],
+  button[aria-label*="toggle" i],
+  button[aria-label*="Toggle" i],
+  button[aria-label*="menu" i],
+  button[aria-label*="Menu" i],
+  #close-modal-btn,
+  #close-index-drawer-btn,
+  #mobile-menu-close-btn,
+  #mobile-nav-toggle-btn {
+    padding: 0 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  /* Ensure close & menu icon SVGs are clearly legible and not shrunk */
+  button[aria-label*="close" i] svg,
+  button[aria-label*="Close" i] svg,
+  button[aria-label*="menu" i] svg,
+  button[aria-label*="Menu" i] svg,
+  #mobile-menu-close-btn svg,
+  #mobile-nav-toggle-btn svg,
+  #close-modal-btn svg,
+  #close-index-drawer-btn svg {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+
+  /* Text action CTA buttons with rounded-full styling on mobile */
+  button.rounded-full:not(:has(> svg:only-child)):not([aria-label*="close" i]):not([aria-label*="Close" i]):not(#mobile-nav-toggle-btn):not(#close-modal-btn):not(#close-index-drawer-btn):not(#mobile-menu-close-btn),
+  a.rounded-full:not(:has(> svg:only-child)) {
+    font-size: 10.5px !important;
+    min-height: 40px !important;
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  /* Named action buttons across forms and modals */
+  button[id*="inquire"]:not(#mobile-nav-toggle-btn),
+  button[id*="submit"]:not(#mobile-nav-toggle-btn) {
+    min-height: 44px !important;
+  }
+}
+
+/* ==========================================================================
+   Architectural Leaflet Map Custom Styling & Filter Theme
+   Warm Alabaster / Parchment / Bronze Architectural Map Theme
+   ========================================================================== */
+
+/* Tile Filter for Warm Architectural Parchment Aesthetic */
+.architectural-map-tiles {
+  filter: sepia(0.28) hue-rotate(-12deg) contrast(1.05) brightness(0.97) saturate(0.85) !important;
+  transition: filter 0.4s ease;
+}
+
+/* Custom Marker Container */
+.custom-leaflet-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Custom Map Marker Pins */
+.map-pin-pulse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-pin-pulse::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: rgba(184, 147, 109, 0.4);
+  animation: radarPing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radarPing {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Leaflet Popup Styling */
+.leaflet-popup-content-wrapper {
+  background: #FAF8F4 !important;
+  color: #181714 !important;
+  border: 1px solid #D5CDBF !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: 0 12px 32px -6px rgba(24, 23, 20, 0.18) !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-content a,
+.leaflet-popup-content a:visited {
+  color: #FAF8F5 !important;
+  text-decoration: none !important;
+}
+
+.map-directions-btn {
+  background-color: #181714 !important;
+  color: #FAF8F5 !important;
+  border: 1px solid #2D2A26 !important;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.map-directions-btn:hover {
+  border-color: #B8936D !important;
+}
+
+.map-details-btn {
+  background-color: #FAF8F4 !important;
+  color: #181714 !important;
+  border: 1px solid #D5CDBF !important;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.map-details-btn:hover {
+  border-color: #CBB8A0 !important;
+}
+
+.leaflet-popup-tip-container {
+  overflow: visible;
+}
+
+.leaflet-popup-tip {
+  background: #FAF8F4 !important;
+  border: 1px solid #D5CDBF !important;
+  box-shadow: none !important;
+}
+
+.leaflet-container {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
+  background-color: #F4F2EB !important;
+  z-index: 10;
+}
+
+/* Allow native vertical page scrolling across the Leaflet map on mobile/touch screens */
+@media (max-width: 1023px) {
+  .leaflet-container,
+  .leaflet-pane,
+  .leaflet-tile-pane,
+  .leaflet-map-pane,
+  .leaflet-overlay-pane {
+    touch-action: pan-y !important;
+  }
+}
+
+/* Universal Form Control & Interactive Element Focus Normalization:
+   Never render harsh black/dark borders, default browser outline rings, or 2px double rings.
+   All inputs, textareas, and selects use 1px hairline border with warm champagne gold (#B8936D) on focus. */
+input,
+textarea,
+select,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #B8936D !important;
+}
+
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+

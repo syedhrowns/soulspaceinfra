@@ -1,0 +1,1232 @@
+export interface FloorPlanScheduleItem {
+  sno: string;
+  floor: string;
+  unitNo: string;
+  type: string;
+  facing: string;
+  saleableAreaSqFt: string;
+  udsSqFt: string;
+}
+
+export interface UnitFloorPlanItem {
+  id: string;
+  unitName: string;
+  subtitle: string;
+  area: string;
+  facing: string;
+  uds?: string;
+  planSlotId: string;
+  isometricSlotId?: string;
+  planOrientation?: 'landscape' | 'portrait' | 'square' | 'wide';
+  isometricOrientation?: 'landscape' | 'portrait' | 'square';
+}
+
+export interface ProximityItem {
+  landmark: string;
+  distanceTime: string;
+  type: 'transit' | 'health' | 'education' | 'tech' | 'retail';
+}
+
+export interface SpecGroup {
+  category: string;
+  items: string[];
+}
+
+export interface LocationAdvantage {
+  title: string;
+  description: string;
+}
+
+export interface ProjectHighlight {
+  title: string;
+  description: string;
+}
+
+export interface FullProjectDetail {
+  id: string;
+  slug: string;
+  code?: string;
+  title: string;
+  tagline: string;
+  subtitle: string;
+  typology: 'residential' | 'commercial';
+  typologyLabel: string;
+  location: string;
+  address: string;
+  coordinates?: string;
+  elevation?: string;
+  year: number;
+  status?: string;
+  brochurePdfUrl?: string;
+  areaSqFt: number;
+  areaM2: number;
+  unitsCount: string;
+  vasthuCompliance: string;
+  heroSlotId: string;
+  aboutSoulSpace: string;
+  aboutProject: string[];
+  keyHighlights: string[];
+  amenitiesList: string[];
+  amenitiesPictureSlots?: {
+    slotId: string;
+    title: string;
+    description: string;
+    orientation: 'landscape' | 'portrait' | 'square' | 'wide';
+  }[];
+  floorPlanSchedule?: FloorPlanScheduleItem[];
+  schedulePictureSlotId?: string;
+  unitFloorPlans?: UnitFloorPlanItem[];
+  spacesDescription?: {
+    title: string;
+    text: string;
+    slotId?: string;
+    orientation: 'landscape' | 'portrait' | 'square' | 'wide';
+  }[];
+  projectHighlightsList?: ProjectHighlight[];
+  locationAdvantages?: LocationAdvantage[];
+  specifications: SpecGroup[];
+  structuralHighlights: {
+    concept: string;
+    foundation: string;
+    masonry: string;
+    flooring: string;
+    doorsWindows: string;
+    electrical: string;
+    plumbing: string;
+  };
+  proximityMatrix?: ProximityItem[];
+  allPictureSlots: {
+    slotId: string;
+    title: string;
+    aspectHint: string;
+    suggestedOrientation: 'landscape' | 'portrait' | 'square' | 'wide';
+    caption: string;
+  }[];
+}
+
+const COMMON_ABOUT_SOUL_SPACE =
+  'Established in 2016 in Coimbatore, Soul Space delivers uncompromising structural durability, 100% Vastu compliance, and direct principal-led project stewardship on every commission.';
+
+export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
+  'mystic-villas': {
+    id: 'mystic-villas',
+    slug: 'mystic-villas',
+    code: '',
+    title: 'MYSTIC',
+    tagline: 'CLOSE TO NATURE, NEAR TO YOUR WORLD',
+    subtitle: 'LUXURY GATED COMMUNITY VILLAS NEAR ISHA — SEMMEDU, COIMBATORE',
+    typology: 'residential',
+    typologyLabel: 'Luxury Farmhouse',
+    location: 'Semmedu, Coimbatore',
+    address: 'Semmedu, Near Isha Yoga Centre & Adiyogi, Coimbatore, Tamil Nadu, India',
+    year: 2025,
+    status: '',
+    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790578902/mystic-e-brochure.pdf',
+    areaSqFt: 2500,
+    areaM2: 232,
+    unitsCount: '22 Cents+ Plantation Land with 2500 sqft Farmhouse',
+    vasthuCompliance: '100% Vasthu Compliant',
+    heroSlotId: 'mystic_img_01',
+    aboutSoulSpace: COMMON_ABOUT_SOUL_SPACE,
+    aboutProject: [
+      'A 2.5-acre biophilic coconut plantation retreat offering customized private farmhouses with Siruvani river bed water, situated just 10 minutes from Isha Adiyogi.',
+      'Designed on an 80-20 ecological balance—80% pristine coconut grove and 20% built farmhouse—each 22-cent plot features a bespoke 2,500 sq.ft residence with a private plunge pool.',
+    ],
+    keyHighlights: [
+      '80-20 Concept: 80% plantation & 20% well-constructed nature homes',
+      'Located at the heart of Siruvani — 2 min to Siruvani river beds with world’s 2nd tastiest water',
+      'Affordable Luxury: Luxury and affordability go hand in hand with social responsibility in mind',
+      '22 Cents (or more) plantation plot with custom 2500 sq.ft. luxury farmhouse',
+      'Private plunge pool included with every villa for soul rejuvenation',
+      'Just 10 minutes drive to Adiyogi Statue and Isha Yoga Centre in Semmedu, Coimbatore',
+    ],
+    projectHighlightsList: [
+      {
+        title: '80-20 Concept',
+        description: '80% lush coconut plantation and 20% built luxury farmhouse with a private plunge pool.',
+      },
+      {
+        title: 'At the Heart of Siruvani',
+        description: 'Positioned 2 minutes from Siruvani river beds with world-renowned natural mineral water.',
+      },
+      {
+        title: 'Attainable Luxury',
+        description: 'Eco-conscious private farmland retreat combining tranquil wellness with high investment value.',
+      },
+    ],
+    amenitiesList: [
+      'A private plunge pool with every Villa',
+      'Koi fish Waterscape',
+      'Stunningly designed entrance arch and gate',
+      '24/7 security service',
+      'Paver block roads',
+      'Entrance Arch',
+      'Well-lit Street light',
+      'Gated community',
+      'CCTV Surveillance',
+    ],
+    amenitiesPictureSlots: [
+      {
+        slotId: 'mystic_img_amenities',
+        title: 'Amenities & Private Plunge Pool',
+        description: 'Private plunge pool, Koi fish waterscape, entrance arch, paver block roads & 24/7 security.',
+        orientation: 'wide',
+      },
+    ],
+    floorPlanSchedule: [
+      {
+        sno: '01',
+        floor: 'Ground & First Floor',
+        unitNo: '2500 SQFT FARMHOUSE VILLA',
+        type: 'Luxury Farmhouse + Private Plunge Pool',
+        facing: 'East / North Compliant',
+        saleableAreaSqFt: '2500 Sq.Ft.',
+        udsSqFt: '22 Cents Land (9583 Sq.Ft.)',
+      },
+    ],
+    unitFloorPlans: [
+      {
+        id: 'mystic-plan-01',
+        unitName: '2500 SQFT FARMHOUSE VILLA',
+        subtitle: '22 Cents Plantation Land + 2500 Sq.Ft. Farmhouse with Private Plunge Pool',
+        area: '2500 Sq.Ft. Built-up on 22+ Cents Land',
+        facing: 'East / North East Vasthu',
+        uds: '22 Cents Plot',
+        planSlotId: 'mystic_img_plan_01',
+        isometricSlotId: 'mystic_img_plan_02',
+        planOrientation: 'landscape',
+        isometricOrientation: 'landscape',
+      },
+    ],
+    specifications: [
+      {
+        category: 'Structure',
+        items: [
+          'RCC Framed structure with isolated footing foundation',
+          '8” Thick AAC Blocks | Solid Blocks | porotherm bricks neatly finished with cement mortar',
+        ],
+      },
+      {
+        category: 'Flooring',
+        items: [
+          'Living & Dining : 800 mm x 800 mm Larger Vitrified tiles',
+          'Kitchen : 800 mm x 800 mm Larger Vitrified tiles',
+          'Bedrooms : 800 mm x 800 mm Larger Vitrified tiles | Wooden flooring',
+          'Toilet : Wall tile up to ceiling level from finished floor level. Anti-skid ceramic tiles for flooring',
+          'Balcony & Utility : Anti-skid ceramic tiles',
+        ],
+      },
+      {
+        category: 'Kitchen',
+        items: [
+          'Counter top : Granite counter with good quality SS sink with single bowl',
+          'Wall Dado : Wall tiles up to ceiling level height from Electric Point',
+        ],
+      },
+      {
+        category: 'Electric Point',
+        items: [
+          'Cables & Wires : Fire resistant ISO branded Finolex, Polycab products',
+          'Switches & sockets : Good quality GM | Legrand modular Switches',
+          'AC : Provision for all bedrooms & Living room',
+          'Power backup : 1 kVA provided for each',
+          'DTH & TV point : Provision will be given in living room',
+          'Provision for chimney, water purifier',
+        ],
+      },
+      {
+        category: 'Plumbing & Sanitary Wares',
+        items: [
+          'Leading branded CPVC pipes for concealed lines',
+          'UPVC pipes for other plumbing lines',
+          'PVC pipes for underground drainage',
+          'Roca | Kohler | American Standard or other equivalent CP and sanitary fittings will be provided',
+          'Provision for exhaust, geyser point will be provided in all bathrooms',
+        ],
+      },
+      {
+        category: 'Doors & Windows',
+        items: [
+          'Main Door : Teakwood frame & Teak ply veneered flush door',
+          'Doors : Teak wood frame and flush door shutters for other doors',
+          'Windows : UPVC | Aluminum frame with high quality MS safety grill',
+          'French Door : UPVC frame with sliding door shutter',
+          'Ventilator : UPVC frame with high quality louvered glass panes',
+          'Toilet Doors : WPC | Framed doors',
+        ],
+      },
+      {
+        category: 'Wall Painting',
+        items: [
+          'Interior Wall : 2 coats of putty, 1 coat primer with 2 Coats of Emulsion',
+          'Exterior Wall : 1 coat primer with 2 coats of weather proof external Emulsion',
+          'Grills & Rails : Zinc Chromite non-corrosive primer with enamel paint',
+        ],
+      },
+    ],
+    structuralHighlights: {
+      concept: '80% plantation & 20% nature homes concept on 2.5 acre heavenly coconut plantation with Siruvani water.',
+      foundation: 'RCC Framed structure with isolated footing foundation.',
+      masonry: '8” Thick AAC Blocks | Solid Blocks | porotherm bricks neatly finished with cement mortar.',
+      flooring: '800x800mm Larger Vitrified tiles & Wooden flooring in bedrooms; Anti-skid ceramic in toilets & balcony.',
+      doorsWindows: 'Teakwood Main Door, UPVC / Aluminum windows with high quality MS safety grill & French sliding doors.',
+      electrical: 'ISO branded Finolex / Polycab cables, GM / Legrand modular switches, 1 kVA power backup & AC provisions.',
+      plumbing: 'Roca | Kohler | American Standard CP & sanitary fittings with CPVC concealed lines & UPVC drainage.',
+    },
+    proximityMatrix: [
+      { landmark: 'Isha Yoga Centre & Adiyogi Statue', distanceTime: '10 Minutes Drive', type: 'health' },
+      { landmark: 'Karunya Institutions & Bethesda Prayer Centre', distanceTime: '10 Minutes Drive', type: 'education' },
+      { landmark: 'Vaidehi Falls', distanceTime: '20 Minutes Drive', type: 'transit' },
+      { landmark: 'Velliangiri Gaushala', distanceTime: '20 Minutes Drive', type: 'transit' },
+      { landmark: 'VELLIANGIRI HILLS (South Kailash)', distanceTime: '30 Minutes Drive', type: 'transit' },
+      { landmark: 'Kovai Kutralam Water Falls', distanceTime: '30 Minutes Drive', type: 'transit' },
+      { landmark: 'Kovai Kondattam Water Amusement Park', distanceTime: '30 Minutes Drive', type: 'retail' },
+      { landmark: '1500-year-old Sri Perur Patteeshwarar Shiva Temple', distanceTime: '30 Minutes Drive', type: 'transit' },
+      { landmark: 'Maruthamalai Murugan Temple', distanceTime: '40 Minutes Drive', type: 'transit' },
+    ],
+    allPictureSlots: [
+      { slotId: 'mystic_img_01', title: 'MYSTIC — Coconut Plantation & Luxury Villa', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'mystic_img_8020', title: '80-20 Concept (80% Plantation & 20% Nature Homes)', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'mystic_img_plan_01', title: 'Floor Plan - Picture 1', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'mystic_img_plan_02', title: 'Floor Plan - Picture 2', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'mystic_img_amenities', title: 'Private Plunge Pool & Amenities', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+    ],
+  },
+  'aurum-villas': {
+    id: 'aurum-villas',
+    slug: 'aurum-villas',
+    code: '',
+    title: 'AURUM',
+    tagline: 'A WORLD OF LUXURY AWAITS',
+    subtitle: 'Own a piece of paradise — collection of 33, three-bedroom luxury villas in Vilankurichi (2,132 – 3,012 Sq.Ft.).',
+    typology: 'residential',
+    typologyLabel: '33 Luxury Villas',
+    location: 'Vilankurichi, Coimbatore',
+    address: 'SF No.189,190 Ashok J nagar R J Matriculation School Back side Vilankurichi Coimbatore - 641035',
+    year: 2024,
+    status: '',
+    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566552/Aurum_E_brochure.pdf',
+    areaSqFt: 3012,
+    areaM2: 280,
+    unitsCount: '33 Three-Bedroom Luxury Villas (2,132 – 3,012 Sq.Ft.)',
+    vasthuCompliance: '100% Vasthu Compliant',
+    heroSlotId: 'aurum_img_01',
+    aboutSoulSpace: COMMON_ABOUT_SOUL_SPACE,
+    aboutProject: [
+      'A master-planned enclave of 33 three-bedroom luxury villas set in Vilankurichi, Coimbatore. Ranging from 2,132 to 3,012 Sq.Ft. across East, West, South, and North facing layouts, Aurum combines architectural elegance with 100% Vastu compliance.',
+      'Residents enjoy a fully furnished private clubhouse, swimming pool, treated hydro-pneumatic water network, and 24/7 dual-gate security surveillance.',
+    ],
+    keyHighlights: [
+      'Collection of 33 Three-Bedroom Luxury Villas across 4 Orientations (2,132 – 3,012 Sq.Ft.)',
+      'East (2,132 Sqft), West (2,883 Sqft), South (2,788 Sqft) & North (3,012 Sqft) Facing Typologies',
+      'Fully Furnished Clubhouse with Gym, Banquet Hall, Snooker & Swimming Pool',
+      'Hydro-Pneumatic Water System with Treated R.O. Water',
+      'Dedicated 11KV/440V Feeders & 62.5 KVA Genset Backup',
+      'Gated Campus with Two Entrance Gates & 24x7 CCTV Surveillance',
+    ],
+    amenitiesList: [
+      'Fully Furnished Clubhouse',
+      'Modern Gymnasium',
+      'Banquet Hall',
+      'Snooker Court',
+      'Table Tennis & Indoor Games',
+      'Terrace Party Lawn',
+      'Swimming Pool',
+      'Common Bore with Treated R.O. Water (Hydro-Pneumatic System)',
+      'Gen-set Backup up to 62.5 KVA (1.5 KVA Backup per House & Common Lighting)',
+      'Entire Property Compounded with Two Entrance Gates',
+      'Neatly Done Paver Roads',
+      '24x7 Campus-Wide CCTV Surveillance',
+      'Intercom Connectivity Across the Community',
+    ],
+    amenitiesPictureSlots: [
+      {
+        slotId: 'aurum_img_02',
+        title: 'Compounded Community & Paver Avenues',
+        description: '',
+        orientation: 'landscape',
+      },
+      {
+        slotId: 'aurum_img_03',
+        title: 'Clubhouse, Swimming Pool & Party Lawn',
+        description: '',
+        orientation: 'landscape',
+      },
+    ],
+    floorPlanSchedule: [
+      { sno: '01', floor: 'Ground & First Floor', unitNo: 'EAST FACING', type: '3 BHK Luxury Villa', facing: 'EAST', saleableAreaSqFt: '2132 Sq.Ft.', udsSqFt: 'Ground 1016 + First 1016 Sq.Ft.' },
+      { sno: '02', floor: 'Ground & First Floor', unitNo: 'WEST FACING', type: '3 BHK Luxury Villa', facing: 'WEST', saleableAreaSqFt: '2883 Sq.Ft.', udsSqFt: 'Ground 1449 + First 1322 Sq.Ft.' },
+      { sno: '03', floor: 'Ground & First Floor', unitNo: 'SOUTH FACING', type: '3 BHK Luxury Villa', facing: 'SOUTH', saleableAreaSqFt: '2788 Sq.Ft.', udsSqFt: 'Ground 1462 + First 1241 Sq.Ft.' },
+      { sno: '04', floor: 'Ground & First Floor', unitNo: 'NORTH FACING', type: '3 BHK Luxury Villa', facing: 'NORTH', saleableAreaSqFt: '3012 Sq.Ft.', udsSqFt: 'Ground 1566 + First 1376 Sq.Ft.' },
+    ],
+    unitFloorPlans: [
+      {
+        id: 'aurum-east-facing',
+        unitName: 'EAST FACING VILLA',
+        subtitle: 'Ground Floor: 1016 Sqft · First Floor: 1016 Sqft',
+        area: '2,132 SQ.FT',
+        facing: 'East Facing',
+        planSlotId: 'aurum_img_plan_east',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'aurum-west-facing',
+        unitName: 'WEST FACING VILLA',
+        subtitle: 'Ground Floor: 1449 Sqft · First Floor: 1322 Sqft',
+        area: '2,883 SQ.FT',
+        facing: 'West Facing',
+        planSlotId: 'aurum_img_plan_west',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'aurum-south-facing',
+        unitName: 'SOUTH FACING VILLA',
+        subtitle: 'Ground Floor: 1462 Sqft · First Floor: 1241 Sqft',
+        area: '2,788 SQ.FT',
+        facing: 'South Facing',
+        planSlotId: 'aurum_img_plan_south',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'aurum-north-facing',
+        unitName: 'NORTH FACING VILLA',
+        subtitle: 'Ground Floor: 1566 Sqft · First Floor: 1376 Sqft',
+        area: '3,012 SQ.FT',
+        facing: 'North Facing',
+        planSlotId: 'aurum_img_plan_north',
+        planOrientation: 'landscape',
+      },
+    ],
+    spacesDescription: [
+      {
+        title: 'HOMES THAT CELEBRATE THE RICHNESS OF LIFE',
+        text: 'Thoughtfully crafted layouts providing generous volume, natural lighting, and refined architectural detailing.',
+        slotId: 'aurum_img_richness',
+        orientation: 'landscape',
+      },
+      {
+        title: 'SPECIALLY CRAFTED FOR THOSE WHO VALUE A PRIVATE LIFESTYLE',
+        text: 'Gated privacy and calm, designed for multi-generational comfort and quiet outdoor relaxation.',
+        slotId: 'aurum_img_private',
+        orientation: 'landscape',
+      },
+      {
+        title: 'INVITING LIVING ROOM',
+        text: 'Expansive open-concept living pavilion with 800x800mm vitrified tiles and seamless garden flow.',
+        slotId: 'aurum_img_living',
+        orientation: 'landscape',
+      },
+    ],
+    locationAdvantages: [
+      {
+        title: 'Industrial Hub',
+        description: 'Close to Coimbatore’s thriving tech corridors and industrial manufacturing zones.',
+      },
+      {
+        title: 'Connectivity',
+        description: 'Effortless access to Avinashi Road, Central Railway Station, and Coimbatore Airport.',
+      },
+      {
+        title: 'Education',
+        description: 'Surrounded by premier matriculation schools, colleges, and healthcare centers.',
+      },
+    ],
+    specifications: [
+      {
+        category: 'A.R.C.C Framed Structure',
+        items: [
+          'Earthquake resistant foundation with R.C.C. M25 Grade concrete.',
+          'Super structure with bricks / solid blocks / Aerocon blocks.',
+          'Masonry in cement mortar.',
+        ],
+      },
+      {
+        category: 'Doors',
+        items: [
+          'Main Door Frame: Best teak wood frame; shutter: flush door with veneer finish and melamine polishing. Locks will be from Yale or Dorma.',
+          'Internal door frame: Best teak wood frames; shutter: Flush door with veneer finish. Locks will be from Yale or Dorma.',
+        ],
+      },
+      {
+        category: 'Painting',
+        items: [
+          'External: 1 coat primer and 2 coats of external weather bond finish.',
+          'Internal: 2 coats of Acrylic Emulsion paint of Nippon make or equivalent; smooth finish with 1 coat of primer over 2 coats of wall care putty in specified areas.',
+        ],
+      },
+      {
+        category: 'Cladding & Dado',
+        items: [
+          'Kitchen: Glazed ceramic tiles dado up to 2’0” height above kitchen counter.',
+          'Bathrooms & Powder Room: Glazed ceramic tile Dado up to 7’0” height.',
+          'Utilities / Wash Area: Glazed ceramic tile Dado up to 3’0” height.',
+        ],
+      },
+      {
+        category: 'Utilities / Wash',
+        items: [
+          'Provision for washing machine & wet area for washing utilities.',
+        ],
+      },
+      {
+        category: 'Plastering & Flooring',
+        items: [
+          'Living room, Drawing room, Dining room: Vitrified flooring tiles of 800 by 800 size with 3” skirting.',
+          'Bedroom: Imported laminated wooden flooring with wooden skirting for master bedroom. Other bedrooms will be 2’ x 2’ vitrified tiles.',
+          'Kitchen: Vitrified flooring tiles of 800 by 800 size with 3” skirting anti-skid finish.',
+          'Bathrooms, Utility, Powder Room, Servant Room: Vitrified / ceramic non-slippery acid-resistant wall tiles and flooring tiles.',
+          'Staircase: Granite flooring with skirting.',
+          'Covered Balconies & Open Portico: Anti-skid vitrified tiles of 1’ x 1’ with 3” skirting.',
+          'Parking Area: Anti-skid parking tiles 1’ x 1’.',
+        ],
+      },
+      {
+        category: 'Kitchen',
+        items: [
+          'Granite platform with high quality S.S sink with treated water connection and provision for fixing R.O. System.',
+          'Provision for exhaust fan and chimney.',
+        ],
+      },
+      {
+        category: 'Plumbing & Sanitary Fixtures',
+        items: [
+          'All bathrooms have CP basin mixer and hot & cold wall mixer with shower.',
+          'All CP Fittings are chrome plated and of Kohler / Roca / American Standard make or equivalent.',
+          'All Sanitary-ware: Kohler / Roca / American Standard make or equivalent.',
+          'Well-planned toilet layout with wet & dry areas.',
+          'Wall hung E.W.C. with concealed flush tank & counter below wash basins.',
+        ],
+      },
+      {
+        category: 'Electrical & Power Supply',
+        items: [
+          'Power: Dedicated 11KV/440V feeders to ensure quality power.',
+          'Concealed copper wiring in PVC Conduits.',
+          '3-Phase supply for each unit and individual METER BOARDS.',
+          'Miniature Circuit Breakers (MCBs) & ELCB.',
+          'All electrical modular switches & sockets of Legrand / MK make or equivalent make.',
+          'Power outlets for air-conditioners in all bedrooms, drawing, living.',
+          'Power plug for cooking range, chimney, refrigerator, microwave, mixer grinder in kitchen.',
+          'Backup Power: Electrical provision only for individual UPS power (UPS will not be provided).',
+        ],
+      },
+      {
+        category: 'Communication',
+        items: [
+          'Connectivity across community for intercom.',
+          'Telephone points in all bedrooms and living room.',
+          'Cable connection in all bedrooms, living room.',
+        ],
+      },
+      {
+        category: 'Air Conditioning Electrical Provision',
+        items: [
+          'Electrical provisions for split air conditioners shall be installed in all bedrooms, living room and dining room.',
+        ],
+      },
+      {
+        category: 'Windows, Compound Wall & Landscaping',
+        items: [
+          'Window frames & shutters in UPVC; elegantly designed MS painted grills and high standard hardware.',
+          'The community will have a secured compound wall. Each villa will have a low level compound wall with a combination of WPC fencing and planter hedges in specified areas.',
+          'External areas of the villas are fully landscaped with grass lawns and anti-skid tiles.',
+          'Handrails: S.S. Handrail with matte finish for main staircase. S.S. Finish or Aluminum finish glass handrails for open balcony areas.',
+          'Internal & external cement plaster with cement finish.',
+        ],
+      },
+    ],
+    structuralHighlights: {
+      concept: 'Earthquake resistant foundation with R.C.C. M25 Grade concrete; super structure with bricks / solid blocks / Aerocon blocks; Masonry in cement mortar.',
+      foundation: 'Earthquake resistant foundation with R.C.C. M25 Grade concrete.',
+      masonry: 'Super structure with bricks / solid blocks / Aerocon blocks; Masonry in cement mortar.',
+      flooring: '800 x 800 mm vitrified tiles with 3" skirting; imported laminated wooden flooring in master bedroom.',
+      doorsWindows: 'Best teak wood frames with veneered flush shutters and Yale or Dorma locks; UPVC windows with MS grills.',
+      electrical: 'Dedicated 11KV/440V feeders, Legrand/MK modular switches, 62.5 KVA genset with 1.5 KVA backup per house.',
+      plumbing: 'Kohler / Roca / American Standard fixtures, treated R.O. water supplied via hydro-pneumatic system.',
+    },
+    allPictureSlots: [
+      { slotId: 'aurum_img_01', title: 'AURUM — Exterior & Elevation', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_02', title: 'Compounded Community & Paver Avenues', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_03', title: 'Clubhouse, Swimming Pool & Party Lawn', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_richness', title: 'Homes that Celebrate the Richness of Life', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_private', title: 'Specially Crafted for Private Lifestyle', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_living', title: 'Inviting Living Room', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_plan_east', title: 'East Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_plan_west', title: 'West Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_plan_south', title: 'South Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'aurum_img_plan_north', title: 'North Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+    ],
+  },
+
+  'abv-arbor': {
+    id: 'abv-arbor',
+    slug: 'abv-arbor',
+    code: '',
+    title: 'ABV ARBOR',
+    tagline: 'SIGN UP FOR AN UNRIVALLED HOME EXPERIENCE',
+    subtitle: 'HEART OF THE CITY | 5 MINUTES FROM RACE COURSE — 12 LUXURY FLATS | 4 BHK & 3 BHK UNITS',
+    typology: 'residential',
+    typologyLabel: 'Luxury Residences',
+    location: 'Ramanathapuram, Coimbatore',
+    address: 'Plot no.18 G square Blue Crest near gem hospital Ramanathapuram Cbe-641045',
+    year: 2025,
+    status: '',
+    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566392/ABV_ARBOR_BROCHURE_FOR_PREVIEW_-_20.4.24.pdf',
+    areaSqFt: 2395,
+    areaM2: 222,
+    unitsCount: '12 Luxury Flats (4 BHK & 3 BHK)',
+    vasthuCompliance: '100% Vastu & Manaiyadi Compliant',
+    heroSlotId: 'abvarbor_img_01',
+    aboutSoulSpace: COMMON_ABOUT_SOUL_SPACE,
+    aboutProject: [
+      'An exclusive boutique residential development located just 5 minutes from Race Course in Ramanathapuram. Stilt + 5 floors RCC framed monolith offering 12 spacious 3 & 4 BHK residences.',
+      'Designed with 100% Vastu compliance, expansive private balconies, terrace gardens, fitness center, piped gas, and hydro-pneumatic water networks.',
+    ],
+    keyHighlights: [
+      'Heart of the City | 5 Minutes from Race Course',
+      '12 Luxury Flats | 4 BHK & 3 BHK Units',
+      'Well Lit & Ventilated Spaces',
+      '100% Vastu & Manaiyadi Compliant',
+      'Stilt + 5 Floors RCC Framed Monolith with Isolated Footing',
+      '8” Thick AAC Blocks | Solid Blocks | Porotherm Bricks',
+    ],
+    amenitiesList: [
+      'Guest House',
+      'Pressure Pump Water Supply',
+      'Gym | Indoor Games',
+      'Piped Gas Connection',
+      'Community | Party Hall',
+      '24 x 7 Security',
+      'Terrace Garden | Kids Play Area',
+      '1 kVA Power Back-up for Each Flat',
+    ],
+    schedulePictureSlotId: 'abvarbor_img_02',
+    floorPlanSchedule: [
+      { sno: '1', floor: '1ST', unitNo: 'A1', type: '3 BHK', facing: 'EAST', saleableAreaSqFt: '2217.00 SQ.FT', udsSqFt: '870.00 SQ.FT' },
+      { sno: '2', floor: '1ST', unitNo: 'B1', type: '4 BHK', facing: 'EAST', saleableAreaSqFt: '2395.00 SQ.FT', udsSqFt: '939.00 SQ.FT' },
+      { sno: '3', floor: '1ST', unitNo: 'C1', type: '3 BHK', facing: 'NORTH', saleableAreaSqFt: '2178.00 SQ.FT', udsSqFt: '854.00 SQ.FT' },
+    ],
+    unitFloorPlans: [
+      {
+        id: 'unit-a',
+        unitName: "UNIT - 'A' (3 BHK)",
+        subtitle: 'EAST FACING AREA : 2217 SQ.FT',
+        area: '2,217 SQ.FT',
+        facing: 'East Facing',
+        uds: '870.00 SQ.FT U.D.S',
+        planSlotId: 'abvarbor_img_03',
+        isometricSlotId: 'abvarbor_img_04',
+        planOrientation: 'landscape',
+        isometricOrientation: 'portrait',
+      },
+      {
+        id: 'unit-b',
+        unitName: "UNIT - 'B' (4 BHK)",
+        subtitle: 'EAST FACING AREA : 2395 SQ.FT',
+        area: '2,395 SQ.FT',
+        facing: 'East Facing',
+        uds: '939.00 SQ.FT U.D.S',
+        planSlotId: 'abvarbor_img_05',
+        isometricSlotId: 'abvarbor_img_06',
+        planOrientation: 'landscape',
+        isometricOrientation: 'portrait',
+      },
+      {
+        id: 'unit-c',
+        unitName: "UNIT - 'C' (3 BHK)",
+        subtitle: 'NORTH FACING AREA : 2178 SQ.FT',
+        area: '2,178 SQ.FT',
+        facing: 'North Facing',
+        uds: '854.00 SQ.FT U.D.S',
+        planSlotId: 'abvarbor_img_07',
+        isometricSlotId: 'abvarbor_img_08',
+        planOrientation: 'landscape',
+        isometricOrientation: 'portrait',
+      },
+    ],
+    spacesDescription: [
+      {
+        title: 'FIRST IMPRESSIONS DOESN’T GET ANY BETTER THAN THIS.',
+        text: '',
+        slotId: 'abvarbor_img_09',
+        orientation: 'landscape',
+      },
+      {
+        title: 'INVITINGLY CAPACIOUS BEDROOM SPACES',
+        text: 'Spacious master suites featuring large fenestrations for optimal daylighting and natural cross-ventilation.',
+        slotId: 'abvarbor_img_10',
+        orientation: 'portrait',
+      },
+      {
+        title: 'EXTRAVAGANT LIVING & DINING SPACE',
+        text: 'Open-concept living and dining zones opening onto deep balconies with panoramic city views.',
+        slotId: 'abvarbor_img_11',
+        orientation: 'landscape',
+      },
+      {
+        title: 'INVITING KITCHEN',
+        text: 'Gourmet kitchen finished with seamless granite countertops, premium joinery, and dedicated utility storage.',
+        slotId: 'abvarbor_img_15',
+        orientation: 'landscape',
+      },
+    ],
+    amenitiesPictureSlots: [
+      {
+        slotId: 'abvarbor_img_12',
+        title: 'COMMUNITY | PARTY HALL',
+        description: '',
+        orientation: 'landscape',
+      },
+      {
+        slotId: 'abvarbor_img_13',
+        title: 'GYM / INDOOR GAMES',
+        description: '',
+        orientation: 'landscape',
+      },
+    ],
+    specifications: [
+      {
+        category: 'Structure',
+        items: [
+          'Floors: Stilt + 5 Floors.',
+          'Structure: RCC Framed structure with isolated footing foundation.',
+          '8” Thick AAC Blocks | Solid Blocks | Porotherm bricks neatly finished with cement mortar.',
+        ],
+      },
+      {
+        category: 'Flooring',
+        items: [
+          'Living & Dining: 800 mm x 800 mm Larger Vitrified tiles.',
+          'Kitchen: 800 mm x 800 mm Larger Vitrified tiles.',
+          'Bedrooms: 800 mm x 800 mm Larger Vitrified tiles | Wooden flooring.',
+          'Toilet: Wall tile up to ceiling level from finished floor level. Anti-skid ceramic tiles for flooring.',
+          'Balcony & Utility: Anti-skid ceramic tiles.',
+          'Staircase: Granite flooring with MS | SS handrails.',
+        ],
+      },
+      {
+        category: 'Kitchen',
+        items: [
+          'Counter top: Granite counter with good quality SS sink with single bowl.',
+          'Wall Dado: Wall tiles up to ceiling level height from counter top.',
+          'Electric point: Provision for chimney, water purifier.',
+        ],
+      },
+      {
+        category: 'Plumbing & Sanitary Wares',
+        items: [
+          'Leading branded CPVC pipes for concealed lines.',
+          'UPVC pipes for other plumbing lines.',
+          'PVC pipes for underground drainage.',
+          'Roca | Kohler | American Standard or other equivalent CP and sanitary fittings will be provided.',
+          'Provision for exhaust, geyser point will be provided in all bathrooms.',
+        ],
+      },
+      {
+        category: 'Doors & Windows',
+        items: [
+          'Main Door: Teakwood frame & Teakply veneered flush door.',
+          'Doors: Teak wood frame and flush door shutters for other doors.',
+          'Windows: UPVC | Aluminum frame with high quality MS safety grill.',
+          'French Door: UPVC frame with sliding door shutter.',
+          'Ventilator: UPVC frame with high quality louvered glass panes.',
+          'Toilet Doors: WPC | Framed doors.',
+        ],
+      },
+      {
+        category: 'Wall Painting',
+        items: [
+          'Interior Wall: 2 coats of putty, 1 coat primer with 2 Coats of Emulsion.',
+          'Exterior Wall: 1 coat primer with 2 coats of weather proof external Emulsion.',
+          'Grills & Rails: Zinc Chromite non-corrosive primer with enamel paint.',
+        ],
+      },
+      {
+        category: 'Electric Point',
+        items: [
+          'Cables & Wires: Fire resistant ISO branded Finolex | Polycab products.',
+          'Switches & Sockets: Good quality GM | Legrand modular Switches.',
+          'AC: Provision for all bedrooms & Living room.',
+          'Power backup: 1 kVA provided for each & every flat.',
+          'DTH & TV point: Provision will be given in living room.',
+        ],
+      },
+    ],
+    structuralHighlights: {
+      concept: 'Stilt + 5 Floors RCC Framed structure with isolated footing foundation and 8” thick masonry.',
+      foundation: 'RCC Framed structure with isolated footing foundation.',
+      masonry: '8” Thick AAC Blocks | Solid Blocks | Porotherm bricks neatly finished with cement mortar.',
+      flooring: '800 mm x 800 mm larger vitrified tiles throughout; wooden bedroom flooring; anti-skid wet zones.',
+      doorsWindows: 'Teakwood frame & Teakply veneered entrance; UPVC sliding French doors with MS safety grill.',
+      electrical: 'Fire resistant ISO branded Finolex / Polycab wiring, GM / Legrand modular switches, 1 kVA per flat.',
+      plumbing: 'Roca | Kohler | American Standard fixtures, pressure pump water supply, and piped gas connection.',
+    },
+    proximityMatrix: [
+      { landmark: 'RACE COURSE', distanceTime: '2.5 km (5 min Drive)', type: 'transit' },
+      { landmark: 'GEM HOSPITAL', distanceTime: '250 m (5 min by Walk)', type: 'health' },
+      { landmark: 'CS ACADEMY CITY CAMPUS', distanceTime: '1.8 Km (5 min Drive)', type: 'education' },
+      { landmark: 'LAKSHMI MILLS', distanceTime: '2.2 Km (5 min Drive)', type: 'retail' },
+      { landmark: 'LULU HYPERMARKET', distanceTime: '2.1 Km (5 min Drive)', type: 'retail' },
+      { landmark: 'RESIDENCY TOWERS HOTEL', distanceTime: '2.7 kms (6 Min Drive)', type: 'retail' },
+      { landmark: 'FUN REPUBLIC MALL', distanceTime: '4.8 km (11 min Drive)', type: 'retail' },
+      { landmark: 'RAILWAY STATION', distanceTime: '4.4 km (11 Min Drive)', type: 'transit' },
+    ],
+    allPictureSlots: [
+      { slotId: 'abvarbor_img_01', title: 'ABV ARBOR — Elevation', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_02', title: 'Typical Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_03', title: "Unit 'A' (3 BHK) Floor Plan", aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_04', title: "Unit 'A' (3 BHK) Isometric View", aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'abvarbor_img_05', title: "Unit 'B' (4 BHK) Floor Plan", aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_06', title: "Unit 'B' (4 BHK) Isometric View", aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'abvarbor_img_07', title: "Unit 'C' (3 BHK) Floor Plan", aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_08', title: "Unit 'C' (3 BHK) Isometric View", aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'abvarbor_img_09', title: 'First Impressions Entrance', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_10', title: 'Invitingly Capacious Bedroom Spaces', aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'abvarbor_img_11', title: 'Extravagant Living & Dining Space', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_12', title: 'Community | Party Hall', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_13', title: 'Gym / Indoor Games', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_14', title: 'Bedroom Suite', aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'abvarbor_img_15', title: 'Gourmet Kitchen', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+    ],
+  },
+
+  'uptown-residences': {
+    id: 'uptown-residences',
+    slug: 'uptown-residences',
+    code: '',
+    title: 'UPTOWN',
+    tagline: '“LUXURY SPACE IN AN UNBEATABLE PRICE”',
+    subtitle: 'A collaborative 110 units of 1(BHK), 2(BHK) & 3(BHK) thoughtfully crafted budget apartments in Eachanari.',
+    typology: 'residential',
+    typologyLabel: 'Crafted Residences',
+    location: 'Eachanari, Coimbatore',
+    address: 'SF No.629/10A Chettipalayam Road Eachanari Site Coimbatore',
+    year: 2025,
+    status: '',
+    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566136/9X9inches_Soulspace_uptown_Brochure_5.pdf',
+    areaSqFt: 1450,
+    areaM2: 135,
+    unitsCount: '110 Units (1 BHK, 2 BHK & 3 BHK)',
+    vasthuCompliance: 'Vaastu Compliant',
+    heroSlotId: 'uptown_img_01',
+    aboutSoulSpace: COMMON_ABOUT_SOUL_SPACE,
+    aboutProject: [
+      'A master-planned residential community of 110 contemporary apartments (1, 2 & 3 BHK) located 500 meters from the 500-year-old Eachanari temple.',
+      'Features a swimming pool, modern gym, community hall, private home theatre, children’s park, and dedicated EV charging bays.',
+    ],
+    projectHighlightsList: [
+      {
+        title: 'Community Spaces',
+        description: 'Swimming pool, children’s park, gym, community hall, and home theatre for recreation.',
+      },
+      {
+        title: 'Prime Location',
+        description: 'Prime junction near Eachanari temple, educational academies, IT corridors, and highway transit.',
+      },
+      {
+        title: 'Value Engineering',
+        description: 'Competitively priced modern living designed to deliver high investment value and comfort.',
+      },
+      {
+        title: 'Quality Construction',
+        description: 'Built with durable RCC foundations and solid blockwork to minimize long-term maintenance.',
+      },
+    ],
+    keyHighlights: [
+      '110 Thoughtfully Crafted Units (1 BHK, 2 BHK & 3 BHK)',
+      'World Class Amenities: Pool, Gym, Community Hall, Home Theatre & Park',
+      '500 Meters from Historic 500-Year-Old Eachanari Vinayagar Temple',
+      'Rapid Proximity: 5 Min to Rathinam Techpark, L&T, & Karpagam Academy',
+      'Affordable Pricing without Compromising Construction Quality',
+      'Sewage Treatment Plant, Piped Gas, EV Charging Port, Ample Parking & DG Backup',
+    ],
+    amenitiesList: [
+      'Swimming pool',
+      'Community Hall',
+      'Indoor Gym',
+      'Home theatre',
+      'Children’s park',
+      'RO water Provision',
+      '24 hours security & surveillance',
+      'Piped gas connection',
+      'Sewage treatment plant',
+      'Ample Car parking space',
+      'EV charging port',
+      'Elevators with DG Back up',
+      'Vaastu compliant',
+    ],
+    unitFloorPlans: [
+      {
+        id: '1bhk-north',
+        unitName: '1BHK (NORTH)',
+        subtitle: 'Isometric Floor Plan',
+        area: '1 BHK',
+        facing: 'North Facing',
+        planSlotId: 'uptown_img_02',
+        isometricSlotId: 'uptown_img_02',
+        planOrientation: 'portrait',
+      },
+      {
+        id: '1bhk-south',
+        unitName: '1BHK (SOUTH)',
+        subtitle: 'Isometric Floor Plan',
+        area: '1 BHK',
+        facing: 'South Facing',
+        planSlotId: 'uptown_img_03',
+        isometricSlotId: 'uptown_img_03',
+        planOrientation: 'portrait',
+      },
+      {
+        id: '2bhk-east',
+        unitName: '2BHK (EAST)',
+        subtitle: 'Isometric Floor Plan',
+        area: '2 BHK',
+        facing: 'East Facing',
+        planSlotId: 'uptown_img_04',
+        isometricSlotId: 'uptown_img_04',
+        planOrientation: 'landscape',
+      },
+      {
+        id: '2bhk-north',
+        unitName: '2BHK (NORTH)',
+        subtitle: 'Isometric Floor Plan',
+        area: '2 BHK',
+        facing: 'North Facing',
+        planSlotId: 'uptown_img_05',
+        isometricSlotId: 'uptown_img_05',
+        planOrientation: 'landscape',
+      },
+      {
+        id: '3bhk-north',
+        unitName: '3BHK (NORTH)',
+        subtitle: 'Isometric Floor Plan',
+        area: '3 BHK',
+        facing: 'North Facing',
+        planSlotId: 'uptown_img_06',
+        isometricSlotId: 'uptown_img_06',
+        planOrientation: 'landscape',
+      },
+      {
+        id: '3bhk-south',
+        unitName: '3BHK (SOUTH)',
+        subtitle: 'Isometric Floor Plan',
+        area: '3 BHK',
+        facing: 'South Facing',
+        planSlotId: 'uptown_img_07',
+        isometricSlotId: 'uptown_img_07',
+        planOrientation: 'landscape',
+      },
+    ],
+    amenitiesPictureSlots: [
+      {
+        slotId: 'uptown_img_08',
+        title: 'Swimming Pool, Gym & Lifestyle Amenities',
+        description: '',
+        orientation: 'landscape',
+      },
+    ],
+    specifications: [
+      {
+        category: 'Structure',
+        items: [
+          'Floors: Stilt + 5 Floors.',
+          'Structure: RCC Framed structure with isolated footing foundation.',
+          '8” Thick Solid Blocks neatly finished with cement mortar.',
+        ],
+      },
+      {
+        category: 'Flooring',
+        items: [
+          'Living & Dining: 600 mm x 600 mm Vitrified tiles.',
+          'Kitchen: 600 mm x 600 mm Vitrified tiles.',
+          'Bedrooms: 600 mm x 600 mm Vitrified tiles.',
+          'Toilet: Wall tile up to lintel level from finished floor level. Anti skid ceramic tiles for flooring.',
+          'Balcony & Utility: Anti-skid ceramic tiles.',
+          'Staircase: Granite flooring with MS handrails.',
+        ],
+      },
+      {
+        category: 'Kitchen',
+        items: [
+          'Counter top: Granite counter with good quality SS sink with single bowl.',
+          'Wall Dado: Wall tiles from counter top to lintel level.',
+          'Electric point: Provision for chimney, water purifier.',
+        ],
+      },
+      {
+        category: 'Plumbing & Sanitary Wares',
+        items: [
+          'Branded CPVC pipes for concealed lines.',
+          'PVC pipes for other plumbing lines.',
+          'PVC pipes for underground drainage.',
+          'Branded or other ISI sanitary fittings will be provided.',
+          'Provision for exhaust, geyser point will be provided in all bathrooms.',
+        ],
+      },
+      {
+        category: 'Doors & Windows',
+        items: [
+          'Main Door: Teakwood frame with flush door.',
+          'Doors: Wooden frames with flush door.',
+          'Windows: UPVC with high quality MS safety grill.',
+          'Ventilator: UPVC frame with high quality louvered glass panes.',
+          'Toilet Doors: WPC | Fiber doors.',
+        ],
+      },
+      {
+        category: 'Wall Painting',
+        items: [
+          'Interior Wall: 2 coats of putty, 1 coat primer with 2 Coats of Emulsion.',
+          'Exterior Wall: 1 coat primer with 2 coats of weather proof external Emulsion.',
+          'Grills & Rails: Zinc Chromite non-corrosive primer with enamel paint.',
+        ],
+      },
+      {
+        category: 'Electric Point',
+        items: [
+          'Cables & Wires: ISO branded products.',
+          'Switches & sockets: Good quality modular Switches.',
+          'AC: Provision for all bedrooms.',
+          'Power backup: Available for common area.',
+          'DTH & TV point: Provision will be given in living room & bedroom.',
+        ],
+      },
+    ],
+    structuralHighlights: {
+      concept: 'Stilt + 5 Floors RCC Framed structure with isolated footing foundation and 8” thick solid blocks.',
+      foundation: 'RCC Framed structure with isolated footing foundation.',
+      masonry: '8” Thick Solid Blocks neatly finished with cement mortar.',
+      flooring: '600 mm x 600 mm Vitrified tiles in living, dining, kitchen, bedrooms; anti-skid ceramic in wet areas.',
+      doorsWindows: 'Teakwood main door frame with flush door; UPVC windows with high quality MS safety grill.',
+      electrical: 'ISO branded cables & wires, good quality modular switches, AC provision in all bedrooms.',
+      plumbing: 'Branded CPVC concealed lines, ISI sanitary fittings, and on-site Sewage Treatment Plant.',
+    },
+    proximityMatrix: [
+      { landmark: 'Eachanari Vinayagar Temple (500-Year-Old)', distanceTime: '500 meters away', type: 'retail' },
+      { landmark: 'L&T Health Centre Hospital', distanceTime: '500 meters away', type: 'health' },
+      { landmark: 'Gedee Public School', distanceTime: '500 meters away', type: 'education' },
+      { landmark: 'ORBINOX India Private Limited', distanceTime: '500 meters away', type: 'tech' },
+      { landmark: 'Rathinam Techpark', distanceTime: '5 min drive', type: 'tech' },
+      { landmark: 'Karpagam Academy of Higher Education', distanceTime: '5 min drive', type: 'education' },
+      { landmark: 'Karpagam Institute of Technology', distanceTime: '5 min drive', type: 'education' },
+      { landmark: 'Larsen & Toubro', distanceTime: '5 min drive', type: 'tech' },
+      { landmark: 'L&T TECH PARK', distanceTime: '10 min drive', type: 'tech' },
+      { landmark: 'Sree Abirami Hospital Private Limited', distanceTime: '10 min drive', type: 'health' },
+      { landmark: 'Firebird Institute Business School', distanceTime: '15 min drive', type: 'education' },
+      { landmark: 'Kari Motor Speedway Racetrack', distanceTime: '20 min drive', type: 'transit' },
+    ],
+    allPictureSlots: [
+      { slotId: 'uptown_img_01', title: 'UPTOWN — Community Elevation', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'uptown_img_02', title: '1BHK (NORTH) Isometric Plan', aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'uptown_img_03', title: '1BHK (SOUTH) Isometric Plan', aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
+      { slotId: 'uptown_img_04', title: '2BHK (EAST) Isometric Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'uptown_img_05', title: '2BHK (NORTH) Isometric Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'uptown_img_06', title: '3BHK (NORTH) Isometric Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'uptown_img_07', title: '3BHK (SOUTH) Isometric Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'uptown_img_08', title: 'Swimming Pool, Gym & Lifestyle Amenities', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+    ],
+  },
+
+  'dotcom-workspaces': {
+    id: 'dotcom-workspaces',
+    slug: 'dotcom-workspaces',
+    code: '',
+    title: 'DOT COM',
+    tagline: "THE CITY'S TECH ADDRESS",
+    subtitle: 'Premier commercial project at the heart of the city, just 5 minutes from Avinashi Road, Nava India Road, and Lakshmi Mills.',
+    typology: 'commercial',
+    typologyLabel: 'Commercial Workspaces',
+    location: 'PN Palayam, Coimbatore',
+    address: 'No.58B, Parameshwaran Layout Road, PN Palayam, Coimbatore, Coimbatore, Tamil Nadu, 641037',
+    year: 2024,
+    status: '',
+    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566130/DOTCOM.pdf',
+    areaSqFt: 2054,
+    areaM2: 191,
+    unitsCount: '16 Workspaces',
+    vasthuCompliance: 'Aligned with Vastu Principles',
+    heroSlotId: 'dotcom_img_01',
+    aboutSoulSpace: COMMON_ABOUT_SOUL_SPACE,
+    aboutProject: [
+      'A premier commercial IT development at PN Palayam, positioned 5 minutes from Avinashi Road and Lakshmi Mills. Offers 16 column-free workspaces engineered with Post-Tensioned (PT) concrete slabs.',
+      'Features 11’6” floor-to-floor ceiling clearances, abundant natural daylighting, rooftop dining, fitness gym, and stacked vehicular parking.',
+    ],
+    keyHighlights: [
+      '16 Expertly Designed Workspaces with Abundant Natural Light',
+      '5 Minutes from Avinashi Road, Nava India Road & Lakshmi Mills',
+      'PT Slab and Beams for Column-Free Office Space',
+      'Floor to Floor Height 11’6” with Wide & Spacious Lobbies',
+      'Rooftop Dining Space & Fitness Gym',
+      '2 & 4 Wheeler Stacked Parking with Specially-Abled Bays',
+    ],
+    amenitiesList: [
+      '2 & 4 Wheeler Parking',
+      'Stacked Car Parking',
+      'Car Parking for Specially Abled',
+      'Spacious Office Workspaces',
+      'Cozy Waiting Lounges',
+      'Private Restrooms for Each Office Unit',
+      'Lift & Staircase (Sophisticated 8-Passenger Elevator)',
+      'Generator Provision for All Common Areas',
+      '1 kVA Power Backup for Each Unit',
+      'Comprehensive CCTV & 24/7 Surveillance',
+      'Video Phone Provisions for Each Workspace Unit',
+      'Modern Clubhouse for Relaxation & Recreation',
+      'Rooftop Dining & Breakout Space',
+      'Well-Equipped Unisex Rooftop Gym',
+      'Driver Waiting Lounge & Restrooms',
+    ],
+    schedulePictureSlotId: 'dotcom_img_02',
+    floorPlanSchedule: [
+      { sno: '1', floor: '1st Floor', unitNo: '101', type: 'Office Space', facing: 'West', saleableAreaSqFt: '2054', udsSqFt: '797' },
+      { sno: '2', floor: '1st Floor', unitNo: '102', type: 'Office Space', facing: 'North', saleableAreaSqFt: '1316', udsSqFt: '511' },
+      { sno: '3', floor: '1st Floor', unitNo: '103', type: 'Office Space', facing: 'North', saleableAreaSqFt: '1623', udsSqFt: '629' },
+      { sno: '4', floor: '1st Floor', unitNo: '104', type: 'Office Space', facing: 'East', saleableAreaSqFt: '1966', udsSqFt: '763' },
+    ],
+    unitFloorPlans: [
+      {
+        id: 'unit-101',
+        unitName: 'UNIT I : FLOOR PLAN',
+        subtitle: '101 | West Facing | 2054 sq. ft | 797 UDS',
+        area: '2,054 sq. ft',
+        facing: 'West Facing',
+        uds: '797 UDS',
+        planSlotId: 'dotcom_img_04',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'unit-102',
+        unitName: 'UNIT II : FLOOR PLAN',
+        subtitle: '102 | North Facing | 1316 sq. ft | 511 UDS',
+        area: '1,316 sq. ft',
+        facing: 'North Facing',
+        uds: '511 UDS',
+        planSlotId: 'dotcom_img_05',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'unit-103',
+        unitName: 'UNIT III : FLOOR PLAN',
+        subtitle: '103 | North Facing | 1623 sq. ft | 629 UDS',
+        area: '1,623 sq. ft',
+        facing: 'North Facing',
+        uds: '629 UDS',
+        planSlotId: 'dotcom_img_06',
+        planOrientation: 'landscape',
+      },
+      {
+        id: 'unit-104',
+        unitName: 'UNIT IV : FLOOR PLAN',
+        subtitle: '104 | East Facing | 1966 sq. ft | 763 UDS',
+        area: '1,966 sq. ft',
+        facing: 'East Facing',
+        uds: '763 UDS',
+        planSlotId: 'dotcom_img_07',
+        planOrientation: 'landscape',
+      },
+    ],
+    amenitiesPictureSlots: [
+      {
+        slotId: 'dotcom_img_03',
+        title: 'FLOOR PLAN',
+        description: '',
+        orientation: 'wide',
+      },
+    ],
+    specifications: [
+      {
+        category: 'Main Building',
+        items: [
+          'RCC Main Frame Stilt structure.',
+          'PT slab and beams for column-free office space.',
+          'Stilt floor exclusive for parking.',
+          'All floors are connected with a staircase and a elevator.',
+          'Solid block / Fly ash or equivalent masonry.',
+          'Floor to floor height 11’6”.',
+          'Wide & Spacious lobby on each floor.',
+        ],
+      },
+      {
+        category: 'Finishing',
+        items: [
+          'Designer corridor flooring in 2’ x 2’ vitrified tiles.',
+          'Toilets – Anti-Skid Vitrified / Ceramic tiles.',
+          'Paver block flooring for parking.',
+          'UPVC windows and ventilators.',
+          'Internal painting with 1 coat primer & 2 coats putty.',
+          'External painting with 1 coat primer & 2 coat weather bond.',
+        ],
+      },
+      {
+        category: 'Plumbing',
+        items: [
+          'Sanitary fittings - Kohler / Roca / Jaquar / Equivalent.',
+          'Sanitary wares - Kohler / Roca / Jaquar / Equivalent.',
+          'High-capacity underground sump.',
+          'Overhead tank.',
+          'Water Softener as applicable.',
+          'Sewage connected to corporation UGD.',
+          'Rainwater harvesting.',
+        ],
+      },
+      {
+        category: 'Electrical',
+        items: [
+          '3-phase energy meter for each unit.',
+          'Copper wiring in PVC conduits.',
+          'Miniature circuit breakers (MCBs) & ELCB.',
+          'Modular switches & sockets of Legrand / Equivalent.',
+          'Connectivity for intercom, internet & telephones.',
+          'High-Powered Genset for offices and common areas.',
+          'Sophisticated 8-passenger elevator.',
+        ],
+      },
+    ],
+    structuralHighlights: {
+      concept: 'RCC Main Frame Stilt structure with PT (Post-Tensioned) slab and beams for column-free office space.',
+      foundation: 'RCC Main Frame Stilt structure engineered for commercial and stacked vehicular loads.',
+      masonry: 'Solid block / Fly ash or equivalent masonry with 11’6” floor-to-floor height.',
+      flooring: 'Designer corridor flooring in 2’ x 2’ vitrified tiles; Anti-skid vitrified / ceramic tiles in toilets.',
+      doorsWindows: 'UPVC windows and ventilators.',
+      electrical: '3-phase energy meter for each unit, Legrand modular switches, High-Powered Genset & 1KVA backup.',
+      plumbing: 'Kohler / Roca / Jaquar sanitary fittings, corporation UGD connection, and rainwater harvesting.',
+    },
+    proximityMatrix: [
+      { landmark: 'Avinashi Road', distanceTime: '5 Minutes', type: 'transit' },
+      { landmark: 'Nava India Road', distanceTime: '5 Minutes', type: 'transit' },
+      { landmark: 'Lakshmi Mills', distanceTime: '5 Minutes', type: 'retail' },
+    ],
+    allPictureSlots: [
+      { slotId: 'dotcom_img_01', title: 'DOTCOM — Commercial Exterior', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'dotcom_img_02', title: 'Schedule of Office Spaces', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'dotcom_img_03', title: 'FLOOR PLAN', aspectHint: 'Wide (21:9)', suggestedOrientation: 'wide', caption: '' },
+      { slotId: 'dotcom_img_04', title: 'Unit I (Office 101) Floor Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'dotcom_img_05', title: 'Unit II (Office 102) Floor Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'dotcom_img_06', title: 'Unit III (Office 103) Floor Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'dotcom_img_07', title: 'Unit IV (Office 104) Floor Plan', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
+    ],
+  },
+};
+
+export function getProjectBySlug(slug: string): FullProjectDetail | null {
+  const normalized = slug.toLowerCase().trim();
+  if (FULL_PROJECTS_DATA[normalized]) {
+    return FULL_PROJECTS_DATA[normalized];
+  }
+  for (const key of Object.keys(FULL_PROJECTS_DATA)) {
+    if (
+      key.includes(normalized) ||
+      normalized.includes(key) ||
+      FULL_PROJECTS_DATA[key].title.toLowerCase() === normalized
+    ) {
+      return FULL_PROJECTS_DATA[key];
+    }
+  }
+  if (normalized === 'mystic' || normalized === 'mystic-villas') return FULL_PROJECTS_DATA['mystic-villas'];
+  if (normalized === 'aurum') return FULL_PROJECTS_DATA['aurum-villas'];
+  if (normalized === 'arbor' || normalized === 'abv') return FULL_PROJECTS_DATA['abv-arbor'];
+  if (normalized === 'dotcom' || normalized === 'dot-com' || normalized === 'dot com' || normalized === 'dotcom-workspaces') return FULL_PROJECTS_DATA['dotcom-workspaces'];
+  if (normalized === 'uptown') return FULL_PROJECTS_DATA['uptown-residences'];
+
+  return null;
+}

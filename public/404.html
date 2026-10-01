@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Soul Space Infrastructure — Spatial Coordinate Not Found</title>
+    <link rel="icon" href="./favicon.ico" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #FAF8F5;
+        color: #181715;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+        -webkit-font-smoothing: antialiased;
+      }
+      .badge {
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        color: #B8936D;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      h1 {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 16px;
+        color: #181715;
+      }
+      p {
+        font-size: 14px;
+        color: #7A7061;
+        max-width: 440px;
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+      a.btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 28px;
+        background-color: #181715;
+        color: #FAF8F5;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        text-decoration: none;
+        border-radius: 9999px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+      }
+      a.btn:hover {
+        background-color: #2D2A26;
+      }
+    </style>
+    <script>
+      // Single Page Application redirect script for GitHub Pages
+      (function() {
+        var l = window.location;
+        // Determine repository subpath depth:
+        // On *.github.io with project repo, keep 1 path segment
+        var pathSegmentsToKeep = l.hostname.endsWith('.github.io') ? 1 : 0;
+        
+        var pathParts = l.pathname.split('/');
+        var repoSegment = pathParts.slice(0, 1 + pathSegmentsToKeep).join('/');
+        var targetRoute = pathParts.slice(1 + pathSegmentsToKeep).join('/').replace(/&/g, '~and~');
+        
+        // If route exists, redirect to root with preserved path
+        if (targetRoute) {
+          l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            repoSegment + '/?/' + targetRoute +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+          );
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="badge">ERROR 404</div>
+    <h1>Spatial Coordinate Not Found</h1>
+    <p>The requested architectural detail or development project does not exist within the archive.</p>
+    <a href="./" class="btn">Return to Developments</a>
+  </body>
+</html>

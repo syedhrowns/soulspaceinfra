@@ -1,9 +1,12 @@
 import type { NextConfig } from 'next';
 
 const isExport = process.env.EXPORT_STATIC === 'true' || process.env.GITHUB_PAGES === 'true';
+const basePath = process.env.BASE_PATH || '';
 
 const nextConfig: NextConfig = {
   output: isExport ? 'export' : undefined,
+  basePath: basePath ? basePath : undefined,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
