@@ -61,7 +61,9 @@ export function BrandLogo({
         className={`flex items-center gap-2 sm:gap-2.5 lg:gap-3 select-none bg-transparent ${className}`}
       >
         {/* Logo Mark Image at Left Side - Perfectly Proportionate & Crisp */}
-        <div className="relative shrink-0 flex items-center justify-center pointer-events-none bg-transparent w-8 h-8 sm:w-9 sm:h-9 md:w-[38px] md:h-[38px]">
+        <div 
+          className="relative shrink-0 flex items-center justify-center pointer-events-none bg-transparent w-8 h-8 sm:w-9 sm:h-9 md:w-[38px] md:h-[38px]"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={logoMarkSrc}

@@ -77,8 +77,8 @@ export function ProjectMap({ onOpenProject, initialLocationId, focusProjectId }:
           </div>
 
           <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal">
-            Architectural Footprint &amp; <br className="hidden sm:inline" />
-            <span className="italic text-[#B8936D]">Site Locations.</span>
+            Architectural Footprint <br className="hidden sm:inline" />
+            <span className="italic text-[#B8936D] font-normal">&amp; Site Locations.</span>
           </h2>
 
           <p className="text-sm text-[#575046] max-w-2xl leading-relaxed font-light">

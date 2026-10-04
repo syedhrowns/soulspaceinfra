@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { getProjectBySlug } from '@/data/projectDataFull';
 
 // Authentic WhatsApp SVG Path matching Soul Space luxury aesthetics
 function WhatsAppIcon({ className = 'w-7 h-7' }: { className?: string }) {
@@ -18,42 +17,14 @@ function WhatsAppIcon({ className = 'w-7 h-7' }: { className?: string }) {
   );
 }
 
-function getPrefilledMessage(pathname: string): string {
-  if (pathname.startsWith('/projects/')) {
-    const slug = pathname.replace('/projects/', '').split('/')[0].split('?')[0];
-    const project = getProjectBySlug(slug);
-    if (project) {
-      return `Hello Soul Space Infrastructure, I am reviewing the ${project.title} (${project.location}) monograph on your website and would like to connect regarding private specifications, pricing, floor plans, and site feasibility.`;
-    }
-    return `Hello Soul Space Infrastructure, I am reviewing your project portfolio on your website and would like to connect regarding pricing, specifications, and availability.`;
-  }
-
-  if (pathname === '/about') {
-    return `Hello Soul Space Infrastructure, I am reviewing your practice monograph and would like to connect regarding an upcoming luxury development in Coimbatore.`;
-  }
-
-  if (pathname === '/vasthu') {
-    return `Hello Soul Space Infrastructure, I am exploring your Vasthu & Manaiyadi Shastra architecture methodology and would like to connect regarding Vasthu-aligned site planning in Coimbatore.`;
-  }
-
-  if (pathname === '/civil-construction') {
-    return `Hello Soul Space Infrastructure, I am reviewing your Civil Construction and Turnkey Contracting capabilities and would like to connect regarding project execution in Coimbatore.`;
-  }
-
-  if (pathname === '/contact') {
-    return `Hello Soul Space Infrastructure, I would like to schedule a private consultation regarding your developments in Coimbatore.`;
-  }
-
-  // Default Home
-  return `Hello Soul Space Infrastructure, I am reviewing your architectural portfolio and would like to connect regarding a development in Coimbatore.`;
-}
-
 export function WhatsAppConcierge() {
   const pathname = usePathname();
+  if (pathname?.startsWith('/admin')) return null;
+
   // Official sales line requested by client
   const salesPhone = '919159133331'; // +91 91591 33331 salesman
-  const message = getPrefilledMessage(pathname || '/');
-  const waUrl = `https://wa.me/${salesPhone}?text=${encodeURIComponent(message)}`;
+  // Direct, clean WhatsApp link without prefilled message box (as requested)
+  const waUrl = `https://wa.me/${salesPhone}`;
 
   return (
     <a

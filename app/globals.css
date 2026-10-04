@@ -7,8 +7,8 @@
 
 @layer base {
   :root {
-    --font-serif: "Cormorant Garamond", var(--font-cormorant), Georgia, serif;
-    --font-sans: "Plus Jakarta Sans", var(--font-jakarta), -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+    --font-sans: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   html.lenis, html.lenis body {
@@ -52,11 +52,11 @@
 }
 
 .font-serif {
-  font-family: "Cormorant Garamond", var(--font-cormorant), Georgia, serif !important;
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif !important;
 }
 
 .font-sans {
-  font-family: "Plus Jakarta Sans", var(--font-jakarta), -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* Pure Glass Blur Surface Classes with Rich Gold Accents */
@@ -249,7 +249,7 @@ nextjs-portal,
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: unifiedSingleBeamText 0.8s linear infinite;
+  animation: unifiedSingleBeamText 2.2s linear infinite;
 }
 
 .animate-flow-light-glide span,
@@ -273,7 +273,7 @@ nextjs-portal,
   );
   background-size: 1200px 100%;
   background-repeat: repeat-x;
-  animation: unifiedSingleBeamLogo 0.8s linear infinite;
+  animation: unifiedSingleBeamLogo 2.2s linear infinite;
   -webkit-mask-image: url('/brand/logo-mark.png');
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -306,7 +306,7 @@ nextjs-portal,
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: unifiedSingleBeamText 0.8s linear infinite;
+  animation: unifiedSingleBeamText 2.2s linear infinite;
 }
 
 .animate-flow-light-glide-dark span,
@@ -330,7 +330,7 @@ nextjs-portal,
   );
   background-size: 1200px 100%;
   background-repeat: repeat-x;
-  animation: unifiedSingleBeamLogo 0.8s linear infinite;
+  animation: unifiedSingleBeamLogo 2.2s linear infinite;
   -webkit-mask-image: url('/brand/logo-mark-dark.png');
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -366,7 +366,6 @@ button,
 #project-brand-logo-link:hover,
 .group:hover svg,
 .group:hover .lucide,
-.group:hover img,
 button:hover > svg,
 button:hover > .lucide,
 a:hover > svg,
@@ -374,6 +373,26 @@ a:hover > .lucide {
   transform: none;
   scale: none;
   translate: none;
+}
+
+/* Strict Zero Image Hover Zoom Rule across entire website - EXCLUDING Leaflet map elements */
+img:not(.leaflet-tile):not(.leaflet-marker-icon),
+img:not(.leaflet-tile):not(.leaflet-marker-icon):hover,
+.group:hover img:not(.leaflet-tile):not(.leaflet-marker-icon),
+figure:hover img:not(.leaflet-tile):not(.leaflet-marker-icon),
+a:hover img:not(.leaflet-tile):not(.leaflet-marker-icon),
+button:hover img:not(.leaflet-tile):not(.leaflet-marker-icon),
+[class*="group"]:hover img:not(.leaflet-tile):not(.leaflet-marker-icon) {
+  transform: none !important;
+  scale: none !important;
+}
+
+/* Disable native browser password reveal and clear buttons to prevent icon collisions */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Ensure logo images and wrappers are completely transparent with no background */
@@ -524,10 +543,15 @@ img[alt*="logo"],
    Warm Alabaster / Parchment / Bronze Architectural Map Theme
    ========================================================================== */
 
-/* Tile Filter for Warm Architectural Parchment Aesthetic */
+/* Tile Filter for Warm Architectural Cartography Aesthetic */
 .architectural-map-tiles {
-  filter: sepia(0.28) hue-rotate(-12deg) contrast(1.05) brightness(0.97) saturate(0.85) !important;
+  filter: sepia(0.08) contrast(1.02) brightness(0.99) !important;
   transition: filter 0.4s ease;
+}
+
+/* Fix famous Leaflet 1.9.4 Chromium bug where plus-lighter blows out tiles into solid white boxes */
+.leaflet-container img.leaflet-tile {
+  mix-blend-mode: normal !important;
 }
 
 /* Custom Marker Container */
@@ -659,6 +683,30 @@ a:focus,
 a:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* ==========================================================================
+   Continuous Infinite Loop Mobile Announcement Marquee Ticker
+   Seamless mathematical loop (0% to -50% translateX)
+   ========================================================================== */
+@keyframes soulspaceTickerLoop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker-loop {
+  display: inline-flex;
+  width: max-content;
+  animation: soulspaceTickerLoop 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker-loop:hover {
+  animation-play-state: paused;
 }
 
 

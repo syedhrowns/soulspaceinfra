@@ -26,8 +26,8 @@ export function Materiality({ onOpenProjectByTitle }: MaterialityProps) {
               <span>THE SPECIFICATION PALETTE</span>
             </div>
             <h2 className="font-serif text-2xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal">
-              Materials &amp; <br className="hidden sm:inline" />
-              <span className="italic text-[#B8936D]">Structural Engineering.</span>
+              Materials <br className="hidden sm:inline" />
+              <span className="italic text-[#B8936D] font-normal">&amp; Structural Engineering.</span>
             </h2>
           </div>
 
@@ -91,10 +91,10 @@ export function Materiality({ onOpenProjectByTitle }: MaterialityProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center w-full"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center w-full min-w-0"
               >
                 {/* Macro Texture Photography Column - Dynamic Adaptive Slot */}
-                <div className="lg:col-span-5 relative w-full bg-[#181715] rounded-lg overflow-hidden">
+                <div className="lg:col-span-5 min-w-0 relative w-full bg-transparent rounded-lg overflow-hidden">
                   <DynamicPictureSlot
                     slotId={`material_img_0${MATERIALS.findIndex((m) => m.id === selectedMaterial.id) + 1}`}
                     title={selectedMaterial.name}
@@ -102,6 +102,7 @@ export function Materiality({ onOpenProjectByTitle }: MaterialityProps) {
                     src={selectedMaterial.image}
                     orientation="portrait"
                     aspectHint="4:3"
+                    maxRenderHeight="520px"
                     className="border-0 rounded-none w-full"
                   />
                 </div>

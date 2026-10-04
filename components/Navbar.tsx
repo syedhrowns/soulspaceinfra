@@ -433,7 +433,7 @@ export function Navbar({ onOpenProject, onOpenCommission }: NavbarProps) {
                   {/* Both WhatsApp Direct Chat Links */}
                   <div className="flex items-center justify-center gap-2.5 text-[10.5px] font-medium text-[#181714] flex-wrap">
                     <a
-                      href="https://wa.me/919677771331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20inquire%20about%20your%20projects."
+                      href="https://wa.me/919677771331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20am%20exploring%20your%20developments%20from%20the%20main%20menu%20and%20would%20like%20to%20connect%20regarding%20turnkey%20construction%20and%20civil%20engineering."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 hover:text-[#B8936D] transition-colors py-0.5"
@@ -444,7 +444,7 @@ export function Navbar({ onOpenProject, onOpenCommission }: NavbarProps) {
                     </a>
                     <span className="text-[#A89F91] hidden sm:inline">&bull;</span>
                     <a
-                      href="https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20inquire%20about%20your%20projects."
+                      href="https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20am%20connecting%20from%20your%20website%20navigation%20and%20would%20like%20to%20speak%20with%20your%20sales%20concierge%20regarding%20current%20project%20availability%20in%20Coimbatore."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 hover:text-[#B8936D] transition-colors py-0.5"
@@ -519,7 +519,7 @@ export function Navbar({ onOpenProject, onOpenCommission }: NavbarProps) {
                 </div>
 
                 <p className="text-[11px] sm:text-xs text-[#5C5346] mb-4 sm:mb-6 leading-relaxed font-light">
-                  Comprehensive index of residential enclaves, luxury villas, and commercial IT developments by Soul Space Infrastructure.
+                  Comprehensive index of Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas by Soul Space Infrastructure.
                 </p>
 
                 <div className="space-y-2.5 sm:space-y-3">

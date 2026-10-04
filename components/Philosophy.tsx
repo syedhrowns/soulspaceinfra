@@ -24,7 +24,7 @@ export function Philosophy() {
             <span className="w-2.5 h-px bg-[#B8936D]" />
           </div>
           <h2 className="font-serif text-2xl sm:text-5xl md:text-6xl text-[#181714] tracking-[-0.03em] font-normal mb-4 sm:mb-6">
-            Quality, Time &amp; Safety
+            Quality, Time <span className="italic text-[#B8936D] font-normal">&amp; Safety.</span>
           </h2>
           <p className="text-xs sm:text-sm text-[#5C5346] leading-relaxed font-light text-center max-w-xl">
             Rooted in disciplined engineering since 2016, Soul Space crafts residential and commercial landmarks where structural rigor, natural light, and timely execution converge.

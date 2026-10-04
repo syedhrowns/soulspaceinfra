@@ -43,7 +43,7 @@ export function Hero({ onOpenProject, onExploreWorks }: HeroProps) {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[calc(100dvh-4rem)] sm:min-h-[calc(100dvh-4.5rem)] flex flex-col items-center justify-center bg-[#FAF8F5] py-8 sm:py-14 lg:py-18 overflow-hidden scroll-mt-20 box-border"
+      className="relative min-h-[calc(100dvh-4rem)] sm:min-h-[calc(100dvh-4.5rem)] flex flex-col items-center justify-center bg-[#FAF8F5] py-6 sm:py-8 lg:py-[clamp(1.5rem,3.5vh,3.5rem)] overflow-hidden scroll-mt-20 box-border"
     >
       {/* Subtle Architectural Background Grid */}
       <div className="absolute inset-0 bg-grid-architectural opacity-30 pointer-events-none" />
@@ -58,10 +58,10 @@ export function Hero({ onOpenProject, onExploreWorks }: HeroProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center justify-center mb-2.5 sm:mb-8 text-center select-none pointer-events-none"
+            className="flex flex-col items-center justify-center mb-2 sm:mb-[clamp(0.75rem,2.2vh,1.75rem)] text-center select-none pointer-events-none"
           >
             {/* Logo Mark - Perfectly Scaled, Completely Still, Zero Background */}
-            <div className="relative flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-2.5 sm:mb-3.5 pointer-events-none bg-transparent">
+            <div className="relative flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 md:w-[clamp(4.5rem,7.5vh,6.5rem)] md:h-[clamp(4.5rem,7.5vh,6.5rem)] mb-2 sm:mb-3 pointer-events-none bg-transparent">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/logo-mark.png"
@@ -87,15 +87,15 @@ export function Hero({ onOpenProject, onExploreWorks }: HeroProps) {
             </div>
           </motion.div>
 
-          {/* Centered Single-Line Headline */}
+          {/* Centered Headline — Increased size strictly on mobile screen & strictly one line */}
           <motion.h1
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif text-[clamp(18px,5vw,25px)] sm:text-3xl md:text-4xl lg:text-5xl text-[#1A1815] font-medium sm:font-normal tracking-[-0.025em] sm:tracking-[-0.03em] text-center w-full max-w-4xl mx-auto leading-tight px-2 mt-2 sm:mt-4 whitespace-nowrap"
+            className="font-serif text-[clamp(17.5px,5.25vw,24px)] sm:text-3xl md:text-4xl lg:text-[clamp(2.25rem,4.5vh,3rem)] text-[#1A1815] font-medium sm:font-normal tracking-[-0.025em] sm:tracking-[-0.03em] text-center w-full max-w-4xl mx-auto leading-tight px-1 sm:px-2 mt-2 sm:mt-3 whitespace-nowrap"
           >
             Crafting Spaces with Quality,{' '}
-            <span className="italic text-[#B8936D] font-normal">&amp; Enduring Value.</span>
+            <span className="italic text-[#B8936D] font-normal whitespace-nowrap">&amp; Enduring Value.</span>
           </motion.h1>
 
           {/* Centered Subtitle Description — Ample line-height and descender clearance for mobile */}
@@ -103,7 +103,7 @@ export function Hero({ onOpenProject, onExploreWorks }: HeroProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[#645D52] text-[12px] sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto font-light text-center px-4 mt-2.5 sm:mt-5 pb-1"
+            className="text-[#645D52] text-[12px] sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto font-light text-center px-4 mt-2 sm:mt-4 pb-1"
           >
             Exclusive luxury residences, gated villa enclaves, and landmark commercial IT workspaces across Coimbatore.
           </motion.p>
@@ -113,7 +113,7 @@ export function Hero({ onOpenProject, onExploreWorks }: HeroProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.85, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-center mt-4 sm:mt-10"
+            className="flex items-center justify-center mt-3 sm:mt-[clamp(0.75rem,2.5vh,2rem)]"
           >
             <button
               onClick={onExploreWorks}

@@ -8,8 +8,10 @@ import {
   RotateCcw, 
   Phone, 
   ExternalLink, 
-  ChevronRight 
+  ChevronRight,
+  MessageSquare
 } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ChatMessage, InfraResponse, generateInfraResponse } from '@/lib/infraEngine';
 import { useScrollLock } from '@/lib/scrollLock';
 
@@ -95,7 +97,7 @@ export function InfraBotLogo({
         strokeWidth="1.8"
       />
 
-      {/* Architectural beacon at apex */}
+      {/* AI Intelligence Spark at apex */}
       {spark && (
         <path
           d="M74 19 C74 22 77 24 80 24 C77 24 74 26 74 29 C74 26 71 24 68 24 C71 24 74 22 74 19 Z"
@@ -125,6 +127,17 @@ const DEFAULT_SUGGESTED_PROMPTS = [
 
 export function InfraChatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useScrollLock(isMobile && isOpen);
+
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_WELCOME]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -135,9 +148,36 @@ export function InfraChatbot() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastUserMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Implement background scroll lock while open
-  useScrollLock(isOpen);
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
+  // Close when clicking outside panel and trigger
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   // Anchor the user prompt at the VERY TOP of the view when replying or when reply arrives
   useEffect(() => {
@@ -152,12 +192,17 @@ export function InfraChatbot() {
     return () => clearTimeout(timer);
   }, [messages, isLoading, isOpen]);
 
-  // Focus input when opened
+  const shouldReduceMotion = useReducedMotion();
+
+  // Focus input when opened (desktop only to avoid unwanted mobile keyboard pop)
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 250);
+      const timer = setTimeout(() => {
+        if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+          inputRef.current?.focus();
+        }
+      }, 280);
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
@@ -174,27 +219,49 @@ export function InfraChatbot() {
     setHasInteracted(true);
     setActionLink(null);
 
-    // Responsive concierge cadence
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: textToSend.trim(),
+          history: newHistory.filter(m => m.role !== 'system'),
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data: InfraResponse = await res.json();
+      
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: data.reply || 'I am pleased to assist with any further details regarding our portfolio.' },
+      ]);
+
+      if (data.suggestedPrompts && data.suggestedPrompts.length > 0) {
+        setSuggestedPrompts(data.suggestedPrompts);
+      } else {
+        setSuggestedPrompts(DEFAULT_SUGGESTED_PROMPTS);
+      }
+
+      if (data.actionLink) {
+        setActionLink(data.actionLink);
+      }
+    } catch (err) {
+      console.warn('Network chat fallback to local engine:', err);
       try {
-        const data: InfraResponse = generateInfraResponse(
-          textToSend.trim(),
-          newHistory.filter(m => m.role !== 'system')
-        );
-        
+        const localData = generateInfraResponse(textToSend.trim(), newHistory);
         setMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: data.reply || 'I am pleased to assist with any further details regarding our portfolio.' },
+          { role: 'assistant', content: localData.reply },
         ]);
-
-        if (data.suggestedPrompts && data.suggestedPrompts.length > 0) {
-          setSuggestedPrompts(data.suggestedPrompts);
-        } else {
-          setSuggestedPrompts(DEFAULT_SUGGESTED_PROMPTS);
+        if (localData.suggestedPrompts && localData.suggestedPrompts.length > 0) {
+          setSuggestedPrompts(localData.suggestedPrompts);
         }
-
-        if (data.actionLink) {
-          setActionLink(data.actionLink);
+        if (localData.actionLink) {
+          setActionLink(localData.actionLink);
         }
       } catch {
         setMessages((prev) => [
@@ -202,14 +269,14 @@ export function InfraChatbot() {
           {
             role: 'assistant',
             content:
-              'I apologize for the momentary delay. Our architectural sales desk is directly reachable at **+91 91591 33331**, or you may re-send your inquiry.',
+              'Our architectural sales desk is directly reachable at [+91 91591 33331](tel:+919159133331) or [Chat on WhatsApp](https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20am%20chatting%20with%20Infra%20on%20your%20website%20and%20would%20like%20to%20connect%20with%20your%20sales%20desk.).',
           },
         ]);
         setSuggestedPrompts(['Call Sales Concierge', 'Tell me about Aurum Villas', 'Schedule a site visit']);
-      } finally {
-        setIsLoading(false);
       }
-    }, 320);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -222,18 +289,25 @@ export function InfraChatbot() {
   /**
    * Executive Minimal Light-Theme Markdown Formatter
    */
+  /**
+   * Executive Minimal Light-Theme Markdown Formatter with Robust Multiline Link Normalization
+   */
   const renderFormattedContent = (content: string) => {
-    const lines = content.split('\n');
+    // 1. Rejoin any broken multiline markdown links e.g. [label]\n(url)
+    const normalized = content.replace(/\[([^\]]+)\]\s*\n\s*\(([^)]+)\)/g, (m, p1, p2) => `[${p1}](${p2})`);
+    const lines = normalized.split('\n');
 
     return lines.map((line, lineIdx) => {
-      if (!line.trim()) {
+      const trimmed = line.trim();
+      if (!trimmed) {
         return <div key={lineIdx} className="h-2" />;
       }
 
-      const isBullet = line.trim().startsWith('•') || line.trim().startsWith('-');
-      const formattedLine = line.replace(/^[•\-]\s*/, '');
+      // Check for bullet lists (*, -, •) or numbered lists (1., 2.)
+      const isBullet = /^[•\-*]|\d+\./.test(trimmed);
+      const formattedLine = trimmed.replace(/^([•\-*]|\d+\.)\s*/, '');
 
-      // Parse bold segments **text**, links [text](url), and phone numbers
+      // Parse bold segments **text**, links [text](url), phone numbers, and raw URLs
       const parseSegments = (str: string) => {
         const parts = [];
         let curr = str;
@@ -243,18 +317,100 @@ export function InfraChatbot() {
           // Check for link [text](url)
           const linkMatch = curr.match(/^\[(.*?)\]\((.*?)\)/);
           if (linkMatch) {
-            parts.push(
-              <Link
-                key={keyCounter++}
-                href={linkMatch[2]}
-                onClick={() => setIsOpen(false)}
-                className="inline-flex items-center gap-1 text-[#1A1815] hover:opacity-70 underline underline-offset-2 font-medium transition-opacity"
-              >
-                {linkMatch[1]}
-                <ExternalLink className="w-3 h-3 inline" />
-              </Link>
-            );
+            const label = linkMatch[1];
+            const url = linkMatch[2];
+            const isPhone = url.startsWith('tel:') || label.toLowerCase().includes('phone') || label.toLowerCase().includes('call');
+            const isWhatsApp = url.includes('wa.me') || url.includes('whatsapp') || label.toLowerCase().includes('whatsapp');
+            const isExternal = url.startsWith('http');
+
+            if (isPhone) {
+              const telTarget = url.startsWith('tel:') ? url : `tel:+919159133331`;
+              parts.push(
+                <a
+                  key={keyCounter++}
+                  href={telTarget}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#FAF5EE] text-[#99744C] border border-[#E5DFD4] hover:border-[#B8936D] text-xs font-medium transition-colors my-0.5"
+                >
+                  <Phone className="w-3 h-3 inline text-[#99744C]" />
+                  <span>{label.replace(/^📞\s*/, '')}</span>
+                </a>
+              );
+            } else if (isWhatsApp) {
+              parts.push(
+                <a
+                  key={keyCounter++}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#EBF7EE] text-[#1E7E34] border border-[#C3E6CB] hover:bg-[#D4EDDA] text-xs font-semibold transition-colors my-0.5"
+                >
+                  <MessageSquare className="w-3 h-3 inline text-[#1E7E34]" />
+                  <span>{label.replace(/^(💬\s*|Chat on\s*)/i, 'WhatsApp: ')}</span>
+                </a>
+              );
+            } else if (isExternal) {
+              parts.push(
+                <a
+                  key={keyCounter++}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[#B8936D] hover:opacity-80 underline underline-offset-2 font-medium"
+                >
+                  {label}
+                  <ExternalLink className="w-3 h-3 inline" />
+                </a>
+              );
+            } else {
+              parts.push(
+                <Link
+                  key={keyCounter++}
+                  href={url}
+                  onClick={() => setIsOpen(false)}
+                  className="inline-flex items-center gap-1 text-[#1A1815] hover:opacity-70 underline underline-offset-2 font-medium transition-opacity"
+                >
+                  {label}
+                  <ExternalLink className="w-3 h-3 inline" />
+                </Link>
+              );
+            }
             curr = curr.slice(linkMatch[0].length);
+            continue;
+          }
+
+          // Check for raw parenthesized or standalone URLs (e.g. (https://wa.me/...) or https://wa.me/...)
+          const rawUrlMatch = curr.match(/^\(?\s*(https?:\/\/[^\s)]+)\s*\)?/);
+          if (rawUrlMatch) {
+            const rawUrl = rawUrlMatch[1];
+            const isWhatsApp = rawUrl.includes('wa.me') || rawUrl.includes('whatsapp');
+            if (isWhatsApp) {
+              parts.push(
+                <a
+                  key={keyCounter++}
+                  href={rawUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#EBF7EE] text-[#1E7E34] border border-[#C3E6CB] hover:bg-[#D4EDDA] text-xs font-semibold transition-colors my-0.5"
+                >
+                  <MessageSquare className="w-3 h-3 inline text-[#1E7E34]" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              );
+            } else {
+              parts.push(
+                <a
+                  key={keyCounter++}
+                  href={rawUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[#B8936D] hover:opacity-80 underline underline-offset-2 font-medium"
+                >
+                  <span>Visit Link</span>
+                  <ExternalLink className="w-3 h-3 inline" />
+                </a>
+              );
+            }
+            curr = curr.slice(rawUrlMatch[0].length);
             continue;
           }
 
@@ -270,7 +426,7 @@ export function InfraChatbot() {
             continue;
           }
 
-          // Check for phone number link
+          // Check for phone number link e.g. +91 91591 33331
           const phoneMatch = curr.match(/^(\+91\s?[0-9]{5}\s?[0-9]{5})/);
           if (phoneMatch) {
             const rawPhone = phoneMatch[1].replace(/\s+/g, '');
@@ -278,9 +434,10 @@ export function InfraChatbot() {
               <a
                 key={keyCounter++}
                 href={`tel:${rawPhone}`}
-                className="inline-flex items-center gap-1 text-[#1A1815] hover:opacity-70 font-medium underline underline-offset-2"
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#FAF5EE] text-[#99744C] border border-[#E5DFD4] hover:border-[#B8936D] text-xs font-medium transition-colors my-0.5"
               >
-                {phoneMatch[1]}
+                <Phone className="w-3 h-3 inline text-[#99744C]" />
+                <span>{phoneMatch[1]}</span>
               </a>
             );
             curr = curr.slice(phoneMatch[0].length);
@@ -288,7 +445,7 @@ export function InfraChatbot() {
           }
 
           // Plain text character
-          const nextSpecial = curr.search(/(\[|\*\*|\+91)/);
+          const nextSpecial = curr.search(/(\[|\*\*|\+91|https?:\/\/|\(https?:\/\/)/);
           if (nextSpecial === -1) {
             parts.push(curr);
             break;
@@ -307,7 +464,7 @@ export function InfraChatbot() {
       if (isBullet) {
         return (
           <div key={lineIdx} className="flex items-start gap-2 my-1 text-[13px] leading-relaxed text-[#38332D]">
-            <span className="text-[#1A1815] mt-1 shrink-0 text-xs">◆</span>
+            <span className="text-[#99744C] mt-1 shrink-0 text-xs">◆</span>
             <div className="flex-1">{parseSegments(formattedLine)}</div>
           </div>
         );
@@ -331,18 +488,25 @@ export function InfraChatbot() {
       {/* ========================================================================= */}
       <div className="fixed bottom-[82px] right-5 sm:bottom-[92px] sm:right-6 z-50 flex items-center select-none print:hidden">
         {/* Subtle Pill Prompt on desktop with light delicate border */}
-        {!isOpen && !hasInteracted && (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="hidden sm:flex items-center gap-2 mr-3 px-3.5 py-1.5 rounded-full bg-[#FAF8F5]/95 backdrop-blur-md border border-[#E8E2D8] hover:border-[#D0C6B8] text-[#1A1815] text-xs font-medium shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all cursor-pointer group"
-          >
-            <span className="text-[#1A1815] transition-colors font-medium">Ask Infra</span>
-            <span className="text-[11px] text-[#857D72]">Architectural AI</span>
-          </button>
-        )}
+        <AnimatePresence>
+          {!isOpen && !hasInteracted && (
+            <motion.button
+              initial={{ opacity: 0, x: 8, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 8, scale: 0.96 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsOpen(true)}
+              className="hidden lg:flex items-center gap-2 mr-3 px-3.5 py-1.5 rounded-full bg-[#FAF8F5]/95 backdrop-blur-md border border-[#E8E2D8] hover:border-[#D0C6B8] text-[#1A1815] text-xs font-medium shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all cursor-pointer group"
+            >
+              <span className="text-[#1A1815] transition-colors font-medium">Ask Infra</span>
+              <span className="text-[11px] text-[#857D72]">Architectural AI</span>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {/* Floating Trigger Disc with light delicate border */}
         <button
+          ref={triggerRef}
           id="infra-chatbot-trigger"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? 'Close Infra Architectural Concierge' : 'Open Infra Architectural Concierge'}
@@ -353,24 +517,71 @@ export function InfraChatbot() {
           }`}
           title="Infra — Architectural AI Concierge"
         >
-          {isOpen ? (
-            <X className="w-5 h-5 text-white transition-transform duration-200" />
-          ) : (
-            <InfraBotLogo className="w-7 h-7 sm:w-8 sm:h-8" />
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            {isOpen ? (
+              <motion.div
+                key="close"
+                initial={shouldReduceMotion ? { opacity: 0 } : { rotate: -90, opacity: 0, scale: 0.8 }}
+                animate={shouldReduceMotion ? { opacity: 1 } : { rotate: 0, opacity: 1, scale: 1 }}
+                exit={shouldReduceMotion ? { opacity: 0 } : { rotate: 90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-center"
+              >
+                <X className="w-5 h-5 text-white" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="logo"
+                initial={shouldReduceMotion ? { opacity: 0 } : { rotate: 90, opacity: 0, scale: 0.8 }}
+                animate={shouldReduceMotion ? { opacity: 1 } : { rotate: 0, opacity: 1, scale: 1 }}
+                exit={shouldReduceMotion ? { opacity: 0 } : { rotate: -90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-center"
+              >
+                <InfraBotLogo className="w-7 h-7 sm:w-8 sm:h-8" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </button>
       </div>
 
       {/* ========================================================================= */}
-      {/* CONCIERGE CHAT WINDOW (All Borders Light, Soft Minimal Styling)           */}
+      {/* CONCIERGE CHAT WINDOW (Hardware-Accelerated, Optimized For All Devices)   */}
       {/* ========================================================================= */}
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-label="Infra Architectural Concierge"
-          data-lenis-prevent
-          className="fixed bottom-[144px] right-4 left-4 sm:left-auto sm:right-6 sm:bottom-[158px] z-50 w-auto sm:w-[420px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[76vh] flex flex-col rounded-2xl bg-[#FAF8F5] border border-[#E8E2D8] shadow-[0_12px_36px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.03)] backdrop-blur-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-        >
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-label="Infra Architectural Concierge"
+            data-lenis-prevent
+            initial={
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 18, scale: 0.95 }
+            }
+            animate={
+              shouldReduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, y: 0, scale: 1 }
+            }
+            exit={
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 14, scale: 0.96 }
+            }
+            transition={{
+              duration: shouldReduceMotion ? 0.15 : 0.28,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="fixed z-50 right-3 sm:right-6 w-[calc(100vw-1.5rem)] sm:w-[410px] md:w-[420px] max-w-[calc(100vw-1.5rem)] sm:max-w-[420px] flex flex-col rounded-2xl bg-[#FAF8F5] border border-[#E8E2D8] shadow-[0_4px_16px_rgba(0,0,0,0.03)] backdrop-blur-xl overflow-hidden overscroll-contain origin-bottom sm:origin-bottom-right transform-gpu"
+            style={{
+              bottom: 'max(16px, min(148px, calc(100dvh - 640px)))',
+              height: 'min(540px, calc(100dvh - 96px))',
+              maxHeight: 'calc(100dvh - 92px)',
+              willChange: 'transform, opacity',
+            }}
+          >
           {/* Minimal Centered Header with light delicate border */}
           <div className="relative px-4 py-3.5 border-b border-[#EFEAE2] bg-[#FAF8F5] flex items-center justify-between">
             {/* Left Action: Reset */}
@@ -415,15 +626,18 @@ export function InfraChatbot() {
           <div 
             ref={scrollContainerRef}
             data-lenis-prevent
-            className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 bg-[#FDFBF9] scroll-pt-3 scrollbar-thin scrollbar-thumb-[#EAE4DC] scrollbar-track-transparent"
+            className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-3.5 bg-[#FDFBF9] scroll-pt-3 scrollbar-thin scrollbar-thumb-[#EAE4DC] scrollbar-track-transparent"
           >
             {messages.map((msg, idx) => {
               const isLastUser = idx === lastUserMessageIndex;
 
               return (
-                <div
+                <motion.div
                   key={idx}
                   ref={isLastUser ? lastUserMessageRef : undefined}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
                   className={`flex flex-col scroll-mt-3 ${
                     msg.role === 'user' ? 'items-end' : 'items-start'
                   }`}
@@ -444,13 +658,17 @@ export function InfraChatbot() {
                     )}
                     {renderFormattedContent(msg.content)}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
 
             {/* Action Link Button if provided */}
             {actionLink && !isLoading && (
-              <div className="flex justify-start pl-1 pt-1">
+              <motion.div 
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-start pl-1 pt-1"
+              >
                 <Link
                   href={actionLink.url}
                   onClick={() => setIsOpen(false)}
@@ -459,24 +677,28 @@ export function InfraChatbot() {
                   <span>{actionLink.label}</span>
                   <ChevronRight className="w-4 h-4 text-white" />
                 </Link>
-              </div>
+              </motion.div>
             )}
 
             {/* Minimal Replying Text Indicator */}
             {isLoading && (
-              <div className="flex items-start">
+              <motion.div 
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-start"
+              >
                 <div className="rounded-2xl rounded-tl-none bg-[#FFFFFF] border border-[#EFEAE2] px-3.5 py-2 text-xs flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#1A1815]/60 animate-pulse" />
                   <span className="font-sans text-[12px] text-[#756E65] tracking-wide">
                     Infra is replying...
                   </span>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
 
           {/* Quick Prompt Suggestion Chips with light delicate borders */}
-          <div className="px-3.5 py-2 border-t border-[#EFEAE2] bg-[#FAF8F5] overflow-x-auto scrollbar-none flex gap-1.5 items-center">
+          <div className="px-3.5 py-2 border-t border-[#EFEAE2] bg-[#FAF8F5] overflow-x-auto scrollbar-none flex gap-1.5 items-center shrink-0">
             {suggestedPrompts.slice(0, 4).map((prompt, pIdx) => (
               <button
                 key={pIdx}
@@ -495,7 +717,7 @@ export function InfraChatbot() {
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 border-t border-[#EFEAE2] bg-[#FAF8F5] flex items-center gap-2"
+            className="p-3 border-t border-[#EFEAE2] bg-[#FAF8F5] flex items-center gap-2 shrink-0"
           >
             <input
               ref={inputRef}
@@ -517,18 +739,33 @@ export function InfraChatbot() {
           </form>
 
           {/* Footer Direct Line Badge with light border */}
-          <div className="px-4 py-1.5 bg-[#FAF8F5] border-t border-[#EFEAE2] flex items-center justify-between text-[10px] text-[#756E65]">
+          <div className="px-3.5 py-1.5 bg-[#FAF8F5] border-t border-[#EFEAE2] flex items-center justify-between text-[10px] text-[#756E65] shrink-0">
             <span>Executive Sales Desk:</span>
-            <a
-              href="tel:+919159133331"
-              className="flex items-center gap-1 text-[#1A1815] hover:underline font-medium"
-            >
-              <Phone className="w-2.5 h-2.5" />
-              <span>+91 91591 33331</span>
-            </a>
+            <div className="flex items-center gap-2.5">
+              <a
+                href="tel:+919159133331"
+                className="flex items-center gap-1 text-[#1A1815] hover:underline font-medium"
+                title="Call Executive Sales Concierge"
+              >
+                <Phone className="w-2.5 h-2.5 text-[#B8936D]" />
+                <span>+91 91591 33331</span>
+              </a>
+              <span className="text-[#C8BFB2]">&bull;</span>
+              <a
+                href="https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20am%20chatting%20with%20Infra%20on%20your%20website%20and%20would%20like%20to%20connect%20with%20your%20executive%20sales%20concierge."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-[#1E7E34] hover:underline font-medium"
+                title="Chat with Executive Sales on WhatsApp"
+              >
+                <MessageSquare className="w-2.5 h-2.5 text-[#1E7E34]" />
+                <span>WhatsApp</span>
+              </a>
+            </div>
           </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -5,8 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { PROJECTS } from '@/data/projects';
 
-// Snappy, silky duration of 1 full completed animation cycle passing through the logo and text (800ms)
-export const ANIMATION_CYCLE_DURATION = 800;
+// Elegant, luxurious duration of 1 full completed animation cycle passing through the logo and text (2200ms)
+export const ANIMATION_CYCLE_DURATION = 2200;
 
 /**
  * Calculates the exact millisecond delay required to complete the CURRENT animation iteration.
@@ -132,6 +132,10 @@ export function PageLoader() {
   const pathname = usePathname();
   const router = useRouter();
 
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const [isVisible, setIsVisible] = useState(true);
   const [loaderKey, setLoaderKey] = useState(0);
 
@@ -158,7 +162,12 @@ export function PageLoader() {
     }
 
     const startTime = startTimeRef.current || Date.now();
-    const delay = calculateIterationCompletionDelay(startTime, ANIMATION_CYCLE_DURATION);
+    const elapsed = Math.max(0, Date.now() - startTime);
+
+    // Guaranteed minimum display duration: whenever loader is shown, ensure at least 1 full 2200ms cycle
+    const remainingInCycle = ANIMATION_CYCLE_DURATION > elapsed ? ANIMATION_CYCLE_DURATION - elapsed : 0;
+    const iterationDelay = calculateIterationCompletionDelay(startTime, ANIMATION_CYCLE_DURATION);
+    const delay = Math.max(remainingInCycle, iterationDelay);
 
     dismissTimerRef.current = setTimeout(() => {
       // Guarantee scroll position starts cleanly at top when page opens
@@ -243,7 +252,7 @@ export function PageLoader() {
 
   // Initial site mount: show loading page and complete at least 1 full animation cycle
   useEffect(() => {
-    startTimeRef.current = typeof performance !== 'undefined' && performance.timeOrigin ? performance.timeOrigin : Date.now();
+    startTimeRef.current = Date.now();
     targetPathRef.current = pathname;
     document.body.style.overflow = 'hidden';
 
@@ -303,7 +312,7 @@ export function PageLoader() {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [markPageReady, pathname]);
+  }, [markPageReady]);
 
   // When pathname changes (new route has mounted): schedule dismissal at end of current cycle
   useEffect(() => {
@@ -323,6 +332,7 @@ export function PageLoader() {
     const handlePopState = () => {
       const nextPath = window.location.pathname;
       if (nextPath === currentPathRef.current) return;
+      currentPathRef.current = nextPath;
 
       if (dismissTimerRef.current) {
         clearTimeout(dismissTimerRef.current);
@@ -437,7 +447,7 @@ export function PageLoader() {
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            transition: { ease: [0.16, 1, 0.3, 1], duration: 0.28 },
+            transition: { ease: [0.16, 1, 0.3, 1], duration: 0.55 },
           }}
           onAnimationComplete={() => {
             if (!isVisible) {

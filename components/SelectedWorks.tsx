@@ -1,18 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DynamicPictureSlot } from '@/components/DynamicPictureSlot';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { PROJECTS } from '@/data/projects';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { getProjectSlotId } from '@/lib/slots';
+import { getAllCustomProjects, ProjectCustomData } from '@/lib/projectContent';
 
 interface SelectedWorksProps {
   onOpenProject: (projectId: string) => void;
 }
 
 export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
+  const [customMap, setCustomMap] = useState<Record<string, ProjectCustomData>>({});
+
+  useEffect(() => {
+    setCustomMap(getAllCustomProjects());
+    const handleUpdate = () => setCustomMap(getAllCustomProjects());
+    window.addEventListener('soulspace-project-updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('soulspace-project-updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
   return (
     <section id="works" className="py-16 sm:py-28 bg-[#F7F5F0] border-b border-[#E3DCCF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,8 +39,8 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
             <h2 
               className="font-serif text-2xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal leading-tight sm:leading-[65px]"
             >
-              Projects &amp; <br className="hidden sm:inline" />
-              <span className="italic text-[#B8936D]">Developments.</span>
+              Projects <br className="hidden sm:inline" />
+              <span className="italic text-[#B8936D] font-normal">&amp; Developments.</span>
             </h2>
           </div>
 
@@ -56,7 +69,7 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
                   >
                     <div
                       onClick={() => onOpenProject(project.id)}
-                      className="relative overflow-hidden rounded-lg bg-[#1E1C19] cursor-pointer"
+                      className="relative overflow-hidden rounded-xl bg-transparent cursor-pointer"
                     >
                       <DynamicPictureSlot
                         slotId={getProjectSlotId(project.id, 1)}
@@ -64,6 +77,7 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
                         caption={project.subtitle}
                         src={project.heroImage}
                         orientation="landscape"
+                        isHero={true}
                         className="border-0 rounded-none w-full"
                       />
                     </div>
@@ -84,7 +98,7 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
                       </Link>
 
                       <p className="text-xs sm:text-[16px] text-[#8C7A65] font-serif mb-3 sm:mb-4 leading-relaxed">
-                        {project.subtitle}
+                        {customMap[project.id]?.tagline || project.subtitle}
                       </p>
 
                       <p className="text-[10px] sm:text-xs text-[#5C5346] font-sans mb-4 sm:mb-5 leading-relaxed">
@@ -98,7 +112,7 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
                             CONFIGURATION
                           </span>
                           <span className="text-xs sm:text-sm font-serif text-[#181715] font-normal">
-                            {project.metrics[0]?.value || 'Custom'}
+                            {customMap[project.id]?.unitsCount || project.metrics[0]?.value || 'Custom'}
                           </span>
                         </div>
                         <div>
@@ -106,7 +120,7 @@ export function SelectedWorks({ onOpenProject }: SelectedWorksProps) {
                             TOTAL BUILT AREA
                           </span>
                           <span className="text-xs sm:text-sm font-serif text-[#181715] font-normal">
-                            {project.areaRange || `${project.areaSqFt.toLocaleString()} sq ft`}
+                            {customMap[project.id]?.areaRange || project.areaRange || `${project.areaSqFt.toLocaleString()} sq ft`}
                           </span>
                         </div>
                         <div className="border-t border-[#EFECE5] pt-2 col-span-2 flex items-center justify-between text-xs text-[#5C5346]">

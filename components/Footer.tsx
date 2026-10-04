@@ -43,7 +43,7 @@ export function Footer({ onOpenProject }: FooterProps) {
             </div>
 
             <p className="text-xs text-[#5C5346] leading-relaxed font-light max-w-lg">
-              Integrated residential and commercial development firm based in Coimbatore. Specializing in luxury villas, premium apartments, column-free commercial IT suites, and turnkey civil execution.
+              Integrated residential and commercial development firm based in Coimbatore. Specializing in Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas.
             </p>
 
             <div className="text-[11px] font-sans text-[#5C5346] space-y-2.5 pt-2">
@@ -87,7 +87,7 @@ export function Footer({ onOpenProject }: FooterProps) {
                 {/* WhatsApp links directly below */}
                 <div className="flex items-center gap-3 pl-5 text-[10.5px] flex-wrap text-[#786E5F]">
                   <a
-                    href="https://wa.me/919677771331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20inquire%20about%20your%20projects."
+                    href="https://wa.me/919677771331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20connect%20with%20your%20Engineering%20%26%20Technical%20team%20regarding%20construction%20standards%2C%20Vastu%20compliance%2C%20and%20turnkey%20execution%20in%20Coimbatore."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 hover:text-[#B8936D] transition-colors"
@@ -98,7 +98,7 @@ export function Footer({ onOpenProject }: FooterProps) {
                   </a>
                   <span>&bull;</span>
                   <a
-                    href="https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20inquire%20about%20your%20projects."
+                    href="https://wa.me/919159133331?text=Hello%20Soul%20Space%20Infrastructure%2C%20I%20would%20like%20to%20connect%20with%20your%20Executive%20Sales%20Concierge%20regarding%20project%20availability%2C%20pricing%20dossiers%2C%20and%20private%20site%20inspections%20in%20Coimbatore."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 hover:text-[#B8936D] transition-colors"
@@ -151,23 +151,15 @@ export function Footer({ onOpenProject }: FooterProps) {
           {/* Nav Links: Developments (Right) */}
           <div className="space-y-3 text-xs shrink-0">
             <span className="text-[11px] font-sans tracking-[0.2em] text-[#B8936D] uppercase block mb-4 font-semibold">
-              FEATURED DEVELOPMENTS
+              OFFICIAL DEVELOPMENTS &bull; SERVICES
             </span>
             <ul className="space-y-2.5 text-[#5C5346]">
-                <li>
-                  <Link
-                    href="/projects/mystic-villas"
-                    className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <span>Mystic — Luxury Villas (Semmedu)</span>
-                  </Link>
-                </li>
                 <li>
                   <Link
                     href="/projects/aurum-villas"
                     className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
                   >
-                    <span>Aurum — Luxury Villas (Vilankurichi)</span>
+                    <span>Aurum — Independent Luxury Villas</span>
                   </Link>
                 </li>
                 <li>
@@ -175,15 +167,7 @@ export function Footer({ onOpenProject }: FooterProps) {
                     href="/projects/abv-arbor"
                     className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
                   >
-                    <span>ABV Arbor — Luxury Flats (Ramanathapuram)</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/projects/dotcom-workspaces"
-                    className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <span>DOT COM — Tech Workspaces (PN Palayam)</span>
+                    <span>ABV Arbor — Luxury Apartments</span>
                   </Link>
                 </li>
                 <li>
@@ -191,7 +175,23 @@ export function Footer({ onOpenProject }: FooterProps) {
                     href="/projects/uptown-residences"
                     className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
                   >
-                    <span>Uptown — Modern Apartments (Eachanari)</span>
+                    <span>Uptown — Budget Apartments</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/projects/dotcom-workspaces"
+                    className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>DOT COM — Commercial Workspaces</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/projects/mystic-villas"
+                    className="hover:text-[#B8936D] transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>Mystic — Farmhouse Villas</span>
                   </Link>
                 </li>
               </ul>

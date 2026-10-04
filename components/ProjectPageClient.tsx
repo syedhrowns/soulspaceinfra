@@ -58,6 +58,7 @@ import { DynamicPictureSlot } from '@/components/DynamicPictureSlot';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
 import { OtherProjects } from '@/components/OtherProjects';
 import { ProjectMap } from '@/components/ProjectMap';
+import { getProjectCustomData, ProjectCustomData } from '@/lib/projectContent';
 import { CommissionEstimator } from '@/components/CommissionEstimator';
 import { ProjectBrochureSection } from '@/components/ProjectBrochureSection';
 import { Footer } from '@/components/Footer';
@@ -246,8 +247,32 @@ interface ProjectPageClientProps {
 }
 
 export function ProjectPageClient({ project }: ProjectPageClientProps) {
-  // State for Unit Plan Tabs (for ABV Arbor, Dotcom, Uptown)
+  // Real-time custom editorial content sync from admin console
+  const [customData, setCustomData] = useState<ProjectCustomData>(() => getProjectCustomData(project.id));
+
+  useEffect(() => {
+    setCustomData(getProjectCustomData(project.id));
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ projectId?: string }>;
+      if (!customEvent.detail || customEvent.detail.projectId === project.id) {
+        setCustomData(getProjectCustomData(project.id));
+      }
+    };
+    window.addEventListener('soulspace-project-updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('soulspace-project-updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, [project.id]);
+
+  const activeTagline = customData.tagline || project.tagline;
+  const activeUnitsCount = customData.unitsCount || project.unitsCount;
+
+  // State for Unit Plan Tabs (for Aurum, ABV Arbor, Dotcom, Uptown)
   const [activeUnitIndex, setActiveUnitIndex] = useState(0);
+  // State for multi-floor villa levels (e.g. Aurum Villas: 'all' | 'ground' | 'first')
+  const [activeFloorView, setActiveFloorView] = useState<'all' | 'ground' | 'first'>('all');
 
   // State for specifications accordion (single-item exclusive open with silky smooth close)
   const [expandedSpec, setExpandedSpec] = useState<number | null>(null);
@@ -328,7 +353,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
       {/* Header: Matches landing page header opacity, insane blur effect, and borderless design */}
       <header
         id="project-navigation"
-        className={`sticky top-0 z-40 py-3 sm:py-4 transition-[background-color,backdrop-filter] duration-500 border-none ${
+        className={`sticky top-0 z-50 py-3 sm:py-4 transition-[background-color,backdrop-filter] duration-500 border-none ${
           hasScrolledPastTop
             ? 'glassmorphic-header shadow-none'
             : 'bg-transparent shadow-none'
@@ -339,9 +364,9 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
           WebkitBackdropFilter: 'blur(28px) saturate(200%)',
         } : undefined}
       >
-        <div className="w-full px-4 sm:px-6 lg:px-8 grid grid-cols-3 items-center h-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-10">
           {/* Left Corner: Back to Home Arrow with scroll-direction blur effect */}
-          <div className="flex items-center justify-start">
+          <div className="flex items-center justify-start z-10">
             <Link
               href="/"
               className={`text-[#1A1815] hover:text-[#B8936D] cursor-pointer inline-flex items-center justify-center p-2 sm:p-1 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 transition-all duration-500 ease-out ${
@@ -356,8 +381,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
             </Link>
           </div>
 
-          {/* Center: BrandLogo scrolls to top of current page without taking user to landing page */}
-          <div className="flex items-center justify-center">
+          {/* Center: BrandLogo strictly centered relative to viewport */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -377,7 +402,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
           </div>
 
           {/* Right: Empty spacer for strict center balance */}
-          <div className="flex items-center justify-end" />
+          <div className="w-6 sm:w-8 pointer-events-none" />
         </div>
       </header>
 
@@ -404,14 +429,14 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
 
             {/* Main Headline */}
             <h1
-              className="font-serif text-2xl sm:text-[70px] leading-snug sm:leading-[78px] text-[#1A1815] font-normal tracking-[-0.035em] mb-3 sm:mb-6 px-2 text-center"
+              className="font-serif text-[clamp(28px,6vw,70px)] leading-[1.08] sm:leading-[1.1] text-[#1A1815] font-normal tracking-[-0.035em] mb-3 sm:mb-6 px-2 text-center"
             >
               {project.title}
             </h1>
 
             {/* Tagline / Subtitle */}
-            <p className="font-serif not-italic text-xs sm:text-2xl text-[#B8936D] max-w-2xl text-center mx-auto mb-3 sm:mb-4 font-normal" style={{ fontStyle: 'normal' }}>
-              {project.tagline}
+            <p className="font-serif not-italic text-sm sm:text-xl md:text-2xl text-[#B8936D] max-w-2xl text-center mx-auto mb-3 sm:mb-4 font-normal leading-snug" style={{ fontStyle: 'normal' }}>
+              {activeTagline}
             </p>
 
             {/* Lead Description */}
@@ -507,6 +532,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
               aspectHint="Cinematic Landscape (16:9)"
               orientation="landscape"
               priority={true}
+              isHero={true}
               className="rounded-2xl"
             />
           </ScrollReveal>
@@ -519,7 +545,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                   Scale &amp; Typology
                 </span>
                 <p className="font-serif text-[13.5px] min-[390px]:text-[15px] sm:text-2xl md:text-3xl text-[#181714] font-normal leading-snug sm:leading-tight text-center">
-                  {project.unitsCount}
+                  {activeUnitsCount}
                 </p>
                 <p className="text-[10px] sm:text-xs text-[#5C5346] leading-tight sm:leading-relaxed font-light mt-0.5 sm:mt-1 text-center">
                   {project.typologyLabel && project.typologyLabel !== project.unitsCount ? project.typologyLabel : 'Luxury Residential'}
@@ -582,8 +608,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
               <h2
                 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#181714] tracking-[-0.03em] font-normal leading-tight sm:leading-[1.15]"
               >
-                Refined Design &amp; <br className="hidden sm:inline" />
-                <span className="italic text-[#B8936D]">Enduring Permanence.</span>
+                Refined Design <br className="hidden sm:inline" />
+                <span className="italic text-[#B8936D] font-normal">&amp; Enduring Permanence.</span>
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">
@@ -638,7 +664,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                       key={i}
                       className="border border-[#DCD5C8] bg-[#FAF8F4] p-4 sm:p-5 rounded-xl flex items-start gap-3.5 transition-all duration-300 hover:border-[#B8936D] group shadow-none"
                     >
-                      <span className="font-serif text-sm font-semibold text-[#B8936D] shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#EBE3D5] flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <span className="font-serif text-sm font-semibold text-[#B8936D] shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#EBE3D5] flex items-center justify-center group-hover:bg-[#B8936D] group-hover:text-white transition-colors">
                         0{i + 1}
                       </span>
                       <p className="text-xs sm:text-[13px] text-[#2D2821] leading-relaxed font-normal min-w-0">
@@ -650,57 +676,79 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
               </div>
             </ScrollReveal>
 
-            {/* Right Picture & Specifications Column (5 cols) */}
-            <ScrollReveal delay={0.15} className="lg:col-span-5 space-y-6 lg:sticky lg:top-24 mt-4 lg:mt-0">
-              {/* Picture Slot for Exterior / Architectural Perspective */}
-              <DynamicPictureSlot
-                slotId={(project.spacesDescription && project.spacesDescription[0]?.slotId) || project.heroSlotId}
-                title={`${project.title} Architectural Perspective`}
-                caption={`${project.title} monolithic perspective and engineering detail.`}
-                orientation="landscape"
-              />
-
-              {/* Quick Distinctions Card */}
-              <div className="border border-[#DCD5C8] bg-[#FAF8F4] p-6 sm:p-7 rounded-xl shadow-none space-y-5">
-                <div className="border-b border-[#D5CDBF] pb-3.5">
-                  <span className="text-[10px] font-sans text-[#B8936D] tracking-widest uppercase font-bold">
-                    SPECIFICATION BRIEF
-                  </span>
-                </div>
-
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/70">
-                    <span className="text-[#7A7061] font-sans">Typology</span>
-                    <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.typologyLabel}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/70">
-                    <span className="text-[#7A7061] font-sans">Scale</span>
-                    <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.unitsCount}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/70">
-                    <span className="text-[#7A7061] font-sans">Total Area</span>
-                    <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.areaSqFt.toLocaleString()} sq ft</span>
-                  </div>
-                  <div className="flex justify-between items-start py-1.5 gap-2">
-                    <span className="text-[#7A7061] font-sans shrink-0 mt-0.5">Address</span>
-                    <span className="font-sans text-xs text-[#181714] text-right flex-1 sm:max-w-[210px] leading-snug pl-2">
-                      {project.address}
+            {/* Right Picture & Specifications Column (5 cols) — Redesigned Unified Architectural Dossier */}
+            <ScrollReveal delay={0.15} className="lg:col-span-5 lg:sticky lg:top-24 mt-4 lg:mt-0">
+              <div className="border border-[#DDD5C7] bg-[#FAF8F5] rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:border-[#B8936D]/60">
+                {/* Dossier Monograph Header Strip */}
+                <div className="px-5 py-3 bg-[#F4EFE6] border-b border-[#DDD5C7] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#B8936D]" />
+                    <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-[#8C7A65] font-bold">
+                      ARCHITECTURAL DOSSIER
                     </span>
                   </div>
-                </div>
-              </div>
-
-              {/* Soul Space Governance Guarantee / Builder Pledge */}
-              <div className="border border-[#DCD5C8] bg-[#FAF8F4] p-5 sm:p-6 rounded-xl space-y-3 shadow-none transition-all hover:border-[#CBB8A0]">
-                <div className="flex items-center gap-2.5 text-[#B8936D] pb-2 border-b border-[#E5DFD4]/70">
-                  <ShieldCheck className="w-4 h-4 text-[#B8936D] shrink-0" />
-                  <span className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-[#B8936D]">
-                    SOUL SPACE BUILDER PLEDGE
+                  <span className="text-[10px] font-mono text-[#8C7A65]/80">
+                    REF // {project.id.toUpperCase()}
                   </span>
                 </div>
-                <p className="text-xs text-[#5C5346] leading-relaxed font-light">
-                  {project.aboutSoulSpace}
-                </p>
+
+                {/* Perspective Visual Frame — Integrated Seamlessly */}
+                <div className="relative border-b border-[#DDD5C7] bg-[#EAE3D5] overflow-hidden">
+                  <DynamicPictureSlot
+                    slotId={(project.spacesDescription && project.spacesDescription[0]?.slotId) || project.heroSlotId}
+                    title={`${project.title} Architectural Perspective`}
+                    caption={`${project.title} monolithic perspective and engineering detail.`}
+                    orientation="landscape"
+                    fitMode="cover"
+                    className="border-0 rounded-none w-full aspect-[16/10]"
+                  />
+                </div>
+
+                {/* Specification Brief Section */}
+                <div className="p-5 sm:p-6 space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#E5DFD4]">
+                    <span className="text-[10px] font-sans text-[#B8936D] tracking-[0.2em] uppercase font-bold">
+                      SPECIFICATION BRIEF
+                    </span>
+                    <span className="text-[10px] font-sans text-[#8C7A65] uppercase tracking-wider">
+                      Core Metrics
+                    </span>
+                  </div>
+
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/60">
+                      <span className="text-[#7A7061] font-sans">Typology</span>
+                      <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.typologyLabel}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/60">
+                      <span className="text-[#7A7061] font-sans">Scale</span>
+                      <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.unitsCount}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-1.5 border-b border-[#E5DFD4]/60">
+                      <span className="text-[#7A7061] font-sans">Total Area</span>
+                      <span className="font-serif text-sm text-[#181714] text-right font-medium">{project.areaSqFt.toLocaleString()} sq ft</span>
+                    </div>
+                    <div className="flex justify-between items-start py-1.5 gap-2">
+                      <span className="text-[#7A7061] font-sans shrink-0 mt-0.5">Address</span>
+                      <span className="font-sans text-xs text-[#181714] text-right flex-1 max-w-[260px] leading-snug pl-2">
+                        {project.address}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Soul Space Governance Guarantee / Builder Pledge — Integrated Footer */}
+                <div className="p-4 sm:p-5 bg-[#F5F0E6] border-t border-[#DDD5C7] space-y-2">
+                  <div className="flex items-center gap-2 text-[#B8936D]">
+                    <ShieldCheck className="w-4 h-4 text-[#B8936D] shrink-0" />
+                    <span className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-[#B8936D]">
+                      SOUL SPACE BUILDER PLEDGE
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] sm:text-xs text-[#5C5346] leading-relaxed font-light">
+                    {project.aboutSoulSpace}
+                  </p>
+                </div>
               </div>
             </ScrollReveal>
           </div>
@@ -720,8 +768,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                   <span className="w-2.5 sm:w-3 h-px bg-[#B8936D] shrink-0" />
                 </div>
                 <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal leading-tight">
-                  Architectural Blueprints &amp; <br className="hidden sm:inline" />
-                  <span className="italic text-[#B8936D]">Unit Layouts.</span>
+                  Architectural Blueprints <br className="hidden sm:inline" />
+                  <span className="italic text-[#B8936D] font-normal">&amp; Unit Layouts.</span>
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">
@@ -741,18 +789,11 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                       <h3 className="font-serif text-xl sm:text-2xl text-[#181714] font-normal">
                         Typical Floor Plan Schedule
                       </h3>
+                      <span className="text-[10px] text-[#8C7A65] font-sans block sm:hidden mt-0.5">
+                        Swipe horizontally to view full schedule &rarr;
+                      </span>
                     </div>
                   </div>
-
-                  {project.schedulePictureSlotId && (
-                    <DynamicPictureSlot
-                      slotId={project.schedulePictureSlotId}
-                      title={`${project.title} Typical Floor Plan Schedule`}
-                      orientation="wide"
-                      aspectHint="Wide (16:10 / 21:9)"
-                      className="mb-6"
-                    />
-                  )}
 
                   {/* Responsive Table */}
                   <div className="overflow-x-auto overscroll-x-contain pb-2">
@@ -788,16 +829,38 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                     </table>
                   </div>
 
-                  {/* Schedule Picture Container if provided */}
-                  {project.schedulePictureSlotId && (
-                    <DynamicPictureSlot
-                      slotId={project.schedulePictureSlotId}
-                      title={`${project.title} Typical Floor Schedule & Layout`}
-                      caption="Architectural schedule master plan schematic."
-                      aspectHint="Landscape (16:10)"
-                      orientation="landscape"
-                      className="mt-8"
-                    />
+                  {/* Schedule & Typical Floor Plan Picture Containers if provided */}
+                  {(project.schedulePictureSlotId || project.typicalFloorPlanSlotId) && (
+                    <div
+                      className={`mt-8 ${
+                        project.schedulePictureSlotId && project.typicalFloorPlanSlotId
+                          ? 'grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start min-w-0'
+                          : 'max-w-5xl lg:max-w-6xl mx-auto min-w-0'
+                      }`}
+                    >
+                      {project.schedulePictureSlotId && (
+                        <DynamicPictureSlot
+                          slotId={project.schedulePictureSlotId}
+                          title={project.schedulePictureSlotTitle || `${project.title} Typical Floor Plan Schedule`}
+                          caption={project.schedulePictureSlotCaption || 'Architectural schedule master plan schematic.'}
+                          aspectHint="Landscape (16:10)"
+                          orientation="landscape"
+                          fitMode="contain"
+                          maxRenderHeight="72vh"
+                        />
+                      )}
+                      {project.typicalFloorPlanSlotId && (
+                        <DynamicPictureSlot
+                          slotId={project.typicalFloorPlanSlotId}
+                          title={project.typicalFloorPlanSlotTitle || `${project.title} Typical Floor Plan`}
+                          caption={project.typicalFloorPlanSlotCaption || 'Typical architectural floor layout.'}
+                          aspectHint="Landscape (16:10)"
+                          orientation="landscape"
+                          fitMode="contain"
+                          maxRenderHeight="72vh"
+                        />
+                      )}
+                    </div>
                   )}
                 </div>
               </ScrollReveal>
@@ -805,32 +868,52 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
 
             {/* Interactive Unit Plan Showcase */}
             <div className="space-y-8">
-              {/* Unit Selector Tabs matching soft warm stone luxury styling */}
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-                {project.unitFloorPlans.map((unit, idx) => {
-                  const isActive = activeUnitIndex === idx;
-                  return (
-                    <button
-                      key={unit.id}
-                      onClick={() => setActiveUnitIndex(idx)}
-                      className={`relative px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs font-sans tracking-[0.14em] uppercase transition-all duration-200 cursor-pointer ${
-                        isActive
-                          ? 'text-[#181714] font-semibold border border-[#D2C5B4] shadow-none'
-                          : 'text-[#4A4237] bg-[#FAF8F4] border border-[#DCD5C8] hover:border-[#CBB8A0]'
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeUnitTabIndicator"
-                          className="absolute inset-0 bg-[#EBE3D5] rounded-full z-0"
-                          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        />
-                      )}
-                      <span className="relative z-10 font-semibold">{unit.unitName}</span>
-                      <span className="relative z-10 text-[10px] opacity-75 ml-1.5 hidden sm:inline">({unit.area})</span>
-                    </button>
-                  );
-                })}
+              {/* Unit Selector Tabs — Architectural Segmented Suite Controller */}
+              <div className="flex justify-center">
+                <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 sm:p-2 rounded-2xl bg-[#ECE6DC] border border-[#D5CDBF] shadow-xs max-w-full">
+                  {project.unitFloorPlans.map((unit, idx) => {
+                    const isActive = activeUnitIndex === idx;
+                    const isAreaRedundant =
+                      !unit.area ||
+                      /^\d+\s*bhk$/i.test(unit.area.trim()) ||
+                      unit.unitName.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unit.area.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                    const showAreaBadge = !isAreaRedundant && /\d{3,}/.test(unit.area);
+                    const cleanArea = unit.area.replace(/sq\.?\s*ft\.?/i, 'SQ FT');
+
+                    return (
+                      <button
+                        key={unit.id}
+                        type="button"
+                        onClick={() => setActiveUnitIndex(idx)}
+                        className={`relative px-4 sm:px-5 py-2.5 sm:py-2.5 rounded-xl text-xs font-sans tracking-[0.12em] uppercase transition-all duration-200 cursor-pointer flex items-center justify-center ${
+                          isActive
+                            ? 'text-white font-semibold'
+                            : 'text-[#5C5346] hover:text-[#181714] hover:bg-black/5 font-medium'
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="activeUnitTabIndicator"
+                            className="absolute inset-0 bg-[#181714] rounded-xl z-0 shadow-sm"
+                            transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                          />
+                        )}
+                        <span className="relative z-10">{unit.unitName}</span>
+                        {showAreaBadge && (
+                          <span
+                            className={`relative z-10 text-[9.5px] font-mono tracking-normal px-2 py-0.5 rounded ml-2 transition-colors ${
+                              isActive
+                                ? 'bg-white/15 text-[#E6D7C3]'
+                                : 'bg-[#DDD5C7] text-[#635747]'
+                            }`}
+                          >
+                            {cleanArea}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Active Unit Layout Container with fluid auto-height morphing */}
@@ -843,53 +926,261 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                      className="border border-[#DCD5C8] bg-[#FAF8F4] rounded-xl p-6 sm:p-10 shadow-none space-y-8 transition-all hover:border-[#CBB8A0]"
+                      className="border border-[#DCD5C8] bg-[#FAF8F4] rounded-xl p-4 sm:p-10 shadow-none space-y-6 sm:space-y-8 transition-all hover:border-[#CBB8A0]"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#D5CDBF] pb-5">
-                        <div>
-                          <div className="flex items-center gap-2 text-[10px] font-sans uppercase tracking-[0.25em] text-[#B8936D] mb-1 font-bold">
-                            <span>{activeUnit.facing}</span>
-                            {activeUnit.uds && <span>· {activeUnit.uds}</span>}
-                          </div>
-                          <h3 className="font-serif text-2xl sm:text-3xl text-[#181714] font-normal">
-                            {activeUnit.unitName}
-                          </h3>
-                          <p className="text-xs text-[#5C5346] font-light leading-relaxed mt-0.5">
-                            {activeUnit.subtitle} · {activeUnit.area}
-                          </p>
-                        </div>
-                      </div>
+                      {/* If singleHouseSlot is true, render the bespoke asymmetric layout with re-aligned text and 1 house picture slot */}
+                      {activeUnit.singleHouseSlot || activeUnit.houseSlotId ? (
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start min-w-0">
+                          {/* Left Column: Re-aligned Text, Specs, Badges & Highlights */}
+                          <div className="lg:col-span-5 min-w-0 space-y-6">
+                            <div className="space-y-2.5 border-b border-[#E5DFD4] pb-5">
+                              <div className="flex items-center gap-2 text-[10px] font-sans uppercase tracking-[0.25em] text-[#B8936D] font-bold">
+                                <span>{activeUnit.facing}</span>
+                                {activeUnit.uds && <span>· {activeUnit.uds}</span>}
+                              </div>
+                              <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#181714] font-normal leading-tight">
+                                {activeUnit.unitName}
+                              </h3>
+                              <p className="text-xs sm:text-sm text-[#7D7262] font-light leading-relaxed">
+                                {activeUnit.subtitle}
+                              </p>
+                            </div>
 
-                      {/* 2D Floor Plan & 3D Isometric View Container */}
-                      <div className={`grid grid-cols-1 ${activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId ? 'lg:grid-cols-2' : ''} gap-8 items-start`}>
-                        <div className={activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId ? '' : 'max-w-2xl sm:max-w-3xl mx-auto w-full'}>
-                          <div className="flex items-center justify-between mb-3 text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
-                            <span>ARCHITECTURAL 2D LAYOUT</span>
-                          </div>
-                          <DynamicPictureSlot
-                            slotId={activeUnit.planSlotId}
-                            title={`${activeUnit.unitName} — Architectural Floor Plan`}
-                            caption="Technical floor distribution, room dimensions, and balcony positioning."
-                            aspectHint={activeUnit.planOrientation === 'portrait' ? 'Vertical (3:4 / 4:5)' : 'Landscape (16:10)'}
-                            orientation={activeUnit.planOrientation || 'landscape'}
-                          />
-                        </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#F2EDE4] border border-[#DDD5C7] text-xs font-mono text-[#3D352A]">
+                                <span className="text-[#8C8273]">Built-Up Area:</span>
+                                <span className="font-semibold text-[#181714]">{activeUnit.area}</span>
+                              </div>
+                              {activeUnit.uds && (
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#F2EDE4] border border-[#DDD5C7] text-xs font-mono text-[#3D352A]">
+                                  <span className="text-[#8C8273]">Plot Size:</span>
+                                  <span className="font-semibold text-[#181714]">{activeUnit.uds}</span>
+                                </div>
+                              )}
+                            </div>
 
-                        {activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId && (
-                          <div>
-                            <div className="flex items-center justify-between mb-3 text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
-                              <span>3D ISOMETRIC VIEW</span>
+                            {activeUnit.description && (
+                              <p className="text-xs sm:text-sm text-[#575046] font-light leading-relaxed">
+                                {activeUnit.description}
+                              </p>
+                            )}
+
+                            {activeUnit.features && activeUnit.features.length > 0 && (
+                              <div className="space-y-3 pt-4 border-t border-[#E5DFD4]">
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-[#A88258] font-bold block">
+                                  Key Architectural Highlights
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
+                                  {activeUnit.features.map((feat, fIdx) => (
+                                    <div key={fIdx} className="flex items-center gap-2.5 text-xs text-[#4A4237]">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8936D] flex-shrink-0" />
+                                      <span className="font-light">{feat}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Right Column: One Dynamic Picture Slot for the House */}
+                          <div className="lg:col-span-7 min-w-0 flex flex-col space-y-3">
+                            <div className="flex items-center justify-between border-b border-[#E5DFD4] pb-2.5">
+                              <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
+                                VILLA ELEVATION &amp; ARCHITECTURE
+                              </span>
                             </div>
                             <DynamicPictureSlot
-                              slotId={activeUnit.isometricSlotId}
-                              title={`${activeUnit.unitName} — 3D Isometric Perspective`}
-                              caption="Three-dimensional axonometric visualization of interior volume and flow."
-                              aspectHint={activeUnit.isometricOrientation === 'portrait' ? 'Vertical (3:4)' : 'Landscape (16:9)'}
-                              orientation={activeUnit.isometricOrientation || 'portrait'}
+                              slotId={activeUnit.houseSlotId || activeUnit.planSlotId}
+                              title={activeUnit.houseSlotTitle || `${activeUnit.unitName} — Luxury House Architecture`}
+                              caption={activeUnit.houseSlotCaption || 'Bespoke contemporary farmhouse elevation and biophilic residential volume.'}
+                              aspectHint="Landscape (16:10)"
+                              orientation="landscape"
+                              className="w-full shadow-xs"
                             />
+                            {activeUnit.houseSlotCaption && (
+                              <p className="text-xs text-[#695F50] font-light leading-relaxed pt-1">
+                                {activeUnit.houseSlotCaption}
+                              </p>
+                            )}
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#D5CDBF] pb-4 sm:pb-5">
+                            <div>
+                              <div className="flex items-center gap-2 text-[10px] font-sans uppercase tracking-[0.25em] text-[#B8936D] mb-1 font-bold">
+                                <span>{activeUnit.facing}</span>
+                                {activeUnit.uds && <span>· {activeUnit.uds}</span>}
+                              </div>
+                              <h3 className="font-serif text-2xl sm:text-3xl text-[#181714] font-normal">
+                                {activeUnit.unitName}
+                              </h3>
+                              <p className="text-xs text-[#5C5346] font-light leading-relaxed mt-0.5">
+                                {activeUnit.subtitle} · {activeUnit.area}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Multi-floor Villa Layout (Ground + First Floor) or Standard 2D/3D Unit Layout */}
+                          {activeUnit.floors && activeUnit.floors.length > 0 ? (
+                            <div className="space-y-6">
+                              {/* Floor Level Filter Tabs */}
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between items-start gap-2.5 border-b border-[#E5DFD4] pb-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
+                                    FLOOR LEVEL VIEW:
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap sm:inline-flex items-center gap-1 p-1 bg-[#EFECE5] rounded-xl sm:rounded-full border border-[#DCD5C8] w-full sm:w-auto justify-center sm:justify-start">
+                                  <button
+                                    type="button"
+                                    onClick={() => setActiveFloorView('all')}
+                                    className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 rounded-lg sm:rounded-full text-[9px] min-[360px]:text-[10px] sm:text-xs font-sans tracking-wider uppercase transition-all cursor-pointer whitespace-nowrap text-center ${
+                                      activeFloorView === 'all'
+                                        ? 'bg-[#181715] text-[#FAF8F5] font-medium shadow-xs'
+                                        : 'text-[#695F50] hover:text-[#181714]'
+                                    }`}
+                                  >
+                                    Both Floors
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setActiveFloorView('ground')}
+                                    className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 rounded-lg sm:rounded-full text-[9px] min-[360px]:text-[10px] sm:text-xs font-sans tracking-wider uppercase transition-all cursor-pointer whitespace-nowrap text-center ${
+                                      activeFloorView === 'ground'
+                                        ? 'bg-[#181715] text-[#FAF8F5] font-medium shadow-xs'
+                                        : 'text-[#695F50] hover:text-[#181714]'
+                                    }`}
+                                  >
+                                    Ground Floor
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setActiveFloorView('first')}
+                                    className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 rounded-lg sm:rounded-full text-[9px] min-[360px]:text-[10px] sm:text-xs font-sans tracking-wider uppercase transition-all cursor-pointer whitespace-nowrap text-center ${
+                                      activeFloorView === 'first'
+                                        ? 'bg-[#181715] text-[#FAF8F5] font-medium shadow-xs'
+                                        : 'text-[#695F50] hover:text-[#181714]'
+                                    }`}
+                                  >
+                                    First Floor
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Dynamic Floor Slots Display */}
+                              {activeFloorView === 'all' ? (
+                                /* Side-by-side Dual Floor Layout (Stacks on mobile/tablet) */
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start min-w-0">
+                                  {activeUnit.floors.map((floor) => (
+                                    <div key={floor.slotId} className="flex flex-col space-y-3 bg-[#FAF8F4] p-4 sm:p-5 rounded-xl border border-[#E0D9CB] min-w-0">
+                                      <div className="flex items-center justify-between border-b border-[#E5DFD4] pb-2.5">
+                                        <div className="flex items-center gap-2">
+                                          <span className="px-2 py-0.5 rounded-sm bg-[#181715] text-[#C5A880] text-[9.5px] font-mono uppercase tracking-wider font-semibold">
+                                            {floor.floorLevel === 'ground' ? 'LVL 00' : 'LVL 01'}
+                                          </span>
+                                          <h4 className="font-serif text-lg sm:text-xl text-[#181714] font-normal">
+                                            {floor.floorTitle}
+                                          </h4>
+                                        </div>
+                                        <span className="text-xs font-sans text-[#B8936D] font-semibold">
+                                          {floor.area}
+                                        </span>
+                                      </div>
+                                      <DynamicPictureSlot
+                                        slotId={floor.slotId}
+                                        title={`${activeUnit.unitName} — ${floor.floorTitle}`}
+                                        caption={floor.caption}
+                                        aspectHint={floor.aspectHint || 'Landscape (16:10)'}
+                                        orientation={floor.orientation || 'landscape'}
+                                        fitMode="contain"
+                                        maxRenderHeight="72vh"
+                                        className="w-full"
+                                      />
+                                      {floor.caption && (
+                                        <p className="text-[11.5px] text-[#695F50] font-light leading-relaxed pt-1">
+                                          {floor.caption}
+                                        </p>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                /* Focused Single Floor Level Layout with Adaptive Wide Container */
+                                <div className="max-w-5xl lg:max-w-6xl mx-auto w-full min-w-0">
+                                  {activeUnit.floors
+                                    .filter((f) => f.floorLevel === activeFloorView)
+                                    .map((floor) => (
+                                      <div key={floor.slotId} className="flex flex-col space-y-3 bg-[#FAF8F4] p-4 sm:p-6 rounded-xl border border-[#E0D9CB]">
+                                        <div className="flex items-center justify-between border-b border-[#E5DFD4] pb-2.5">
+                                          <div className="flex items-center gap-2">
+                                            <span className="px-2.5 py-0.5 rounded-sm bg-[#181715] text-[#C5A880] text-[10px] font-mono uppercase tracking-wider font-semibold">
+                                              {floor.floorLevel === 'ground' ? 'LEVEL 00 · GROUND FLOOR' : 'LEVEL 01 · FIRST FLOOR'}
+                                            </span>
+                                            <h4 className="font-serif text-xl sm:text-2xl text-[#181714] font-normal">
+                                              {floor.floorTitle}
+                                            </h4>
+                                          </div>
+                                          <span className="text-sm font-sans text-[#B8936D] font-semibold">
+                                            {floor.area}
+                                          </span>
+                                        </div>
+                                        <DynamicPictureSlot
+                                          slotId={floor.slotId}
+                                          title={`${activeUnit.unitName} — ${floor.floorTitle}`}
+                                          caption={floor.caption}
+                                          aspectHint={floor.aspectHint || 'Landscape (16:10)'}
+                                          orientation={floor.orientation || 'landscape'}
+                                          className="w-full"
+                                        />
+                                        {floor.caption && (
+                                          <p className="text-xs text-[#695F50] font-light leading-relaxed pt-1">
+                                            {floor.caption}
+                                          </p>
+                                        )}
+                                      </div>
+                                    ))}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            /* 2D Floor Plan & 3D Isometric View Container for other projects */
+                            <div className={`grid grid-cols-1 ${activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId ? 'lg:grid-cols-2' : ''} gap-8 items-start`}>
+                              <div className={activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId ? 'min-w-0' : 'max-w-4xl lg:max-w-5xl mx-auto w-full min-w-0'}>
+                                <div className="flex items-center justify-between mb-3 text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
+                                  <span>ARCHITECTURAL 2D LAYOUT</span>
+                                </div>
+                                <DynamicPictureSlot
+                                  slotId={activeUnit.planSlotId}
+                                  title={`${activeUnit.unitName} — Architectural Floor Plan`}
+                                  caption="Technical floor distribution, room dimensions, and balcony positioning."
+                                  aspectHint={activeUnit.planOrientation === 'portrait' ? 'Vertical (3:4 / 4:5)' : 'Landscape (16:10)'}
+                                  orientation={activeUnit.planOrientation || 'landscape'}
+                                  fitMode="contain"
+                                  maxRenderHeight="72vh"
+                                />
+                              </div>
+
+                              {activeUnit.isometricSlotId && activeUnit.isometricSlotId !== activeUnit.planSlotId && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-3 text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
+                                    <span>3D ISOMETRIC VIEW</span>
+                                  </div>
+                                  <DynamicPictureSlot
+                                    slotId={activeUnit.isometricSlotId}
+                                    title={`${activeUnit.unitName} — 3D Isometric Perspective`}
+                                    caption="Three-dimensional axonometric visualization of interior volume and flow."
+                                    aspectHint={activeUnit.isometricOrientation === 'portrait' ? 'Vertical (3:4)' : 'Landscape (16:9)'}
+                                    orientation={activeUnit.isometricOrientation || 'portrait'}
+                                    fitMode="contain"
+                                    maxRenderHeight="72vh"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -911,8 +1202,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                   <span>SPATIAL WALKTHROUGH</span>
                 </div>
                 <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#181714] tracking-[-0.03em] font-normal leading-tight">
-                  Curated Spaces &amp; <br className="hidden sm:inline" />
-                  <span className="italic text-[#B8936D]">Living Flow.</span>
+                  Curated Spaces <br className="hidden sm:inline" />
+                  <span className="italic text-[#B8936D] font-normal">&amp; Living Flow.</span>
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">
@@ -950,26 +1241,21 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                 return (
                   <ScrollReveal
                     key={idx}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center"
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center min-w-0"
                   >
-                    {/* Visual Container (7 cols) */}
-                    <div className={`lg:col-span-7 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                    {/* Strictly Uniform Architectural Visual Container Across All Project Pages */}
+                    <div className={`lg:col-span-7 min-w-0 ${isEven ? 'lg:order-1' : 'lg:order-2'} flex flex-col justify-center`}>
                       <DynamicPictureSlot
                         slotId={space.slotId!}
                         title={space.title}
-                        orientation={space.orientation}
-                        aspectHint={
-                          space.orientation === 'portrait'
-                            ? 'Vertical (3:4)'
-                            : space.orientation === 'wide'
-                            ? 'Panoramic (21:9)'
-                            : 'Landscape (16:9)'
-                        }
+                        aspectRatio="16/10"
+                        fitMode="cover"
+                        className="w-full rounded-2xl overflow-hidden border border-[#DCD5C8] shadow-sm bg-[#EAE4D8]"
                       />
                     </div>
 
-                    {/* Text Column (5 cols) */}
-                    <div className={`lg:col-span-5 ${isEven ? 'lg:order-2' : 'lg:order-1'} space-y-4`}>
+                    {/* Strictly Uniform Text Column */}
+                    <div className={`lg:col-span-5 min-w-0 ${isEven ? 'lg:order-2' : 'lg:order-1'} space-y-4`}>
                       <span className="text-[9px] sm:text-[10px] font-sans text-[#B8936D] tracking-widest block mb-2 font-bold uppercase">
                         ARCHITECTURAL LIVING ZONE
                       </span>
@@ -1022,7 +1308,7 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
               return (
                 <StaggerItem
                   key={idx}
-                  className="group relative flex items-center gap-4 p-6 sm:p-7 rounded-2xl border border-[#DCD5C8] bg-[#FAF8F5] transition-all duration-300 hover:border-[#CBB8A0] hover:shadow-none min-h-[118px] overflow-hidden"
+                  className="group relative flex items-center gap-4 p-6 sm:p-7 rounded-2xl border border-[#DCD5C8] bg-[#FAF8F5] transition-all duration-300 hover:border-[#CBB8A0] hover:shadow-none min-h-[118px]"
                 >
                   {/* Luxury Obsidian Icon Coin */}
                   <div className="w-12 h-12 rounded-xl bg-[#181715] border border-[#2D2A26] flex items-center justify-center text-[#C5A880] group-hover:border-[#CBB8A0] transition-all duration-300 shadow-none shrink-0">
@@ -1046,21 +1332,54 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
           {/* Amenities Picture Slots (if configured) */}
           {project.amenitiesPictureSlots && project.amenitiesPictureSlots.length > 0 && (
             <div
-              className={`grid gap-8 ${
+              className={`grid gap-6 lg:gap-8 ${
                 project.amenitiesPictureSlots.length === 1
-                  ? 'grid-cols-1 max-w-4xl mx-auto'
-                  : 'grid-cols-1 md:grid-cols-2'
+                  ? 'grid-cols-1 max-w-5xl lg:max-w-6xl mx-auto min-w-0'
+                  : project.amenitiesPictureSlots.length === 3
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-w-0'
+                  : 'grid-cols-1 md:grid-cols-2 min-w-0'
               }`}
             >
               {project.amenitiesPictureSlots.map((slot, idx) => (
-                <ScrollReveal key={idx} delay={idx * 0.1}>
-                  <DynamicPictureSlot
-                    slotId={slot.slotId}
-                    title={slot.title}
-                    caption={slot.description}
-                    orientation={slot.orientation}
-                    aspectHint={slot.orientation === 'wide' ? 'Wide (21:9)' : 'Landscape (16:10)'}
-                  />
+                <ScrollReveal
+                  key={idx}
+                  delay={idx * 0.1}
+                  className={
+                    project.amenitiesPictureSlots &&
+                    project.amenitiesPictureSlots.length === 3 &&
+                    idx === 2
+                      ? 'md:col-span-2 lg:col-span-1 md:max-w-xl md:mx-auto lg:max-w-none w-full'
+                      : 'w-full'
+                  }
+                >
+                  <div className="flex flex-col space-y-3 bg-[#FAF8F4] p-4 sm:p-5 rounded-xl border border-[#E0D9CB] h-full justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between border-b border-[#E5DFD4] pb-2.5">
+                        <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-[#B8936D] font-bold">
+                          AMENITY SPOTLIGHT
+                        </span>
+                      </div>
+                      <DynamicPictureSlot
+                        slotId={slot.slotId}
+                        title={slot.title}
+                        caption={slot.description}
+                        orientation={slot.orientation}
+                        aspectHint={slot.orientation === 'wide' ? 'Wide (21:9)' : 'Landscape (16:10)'}
+                        fitMode="cover"
+                        className="w-full shadow-xs aspect-[16/10]"
+                      />
+                    </div>
+                    <div className="space-y-1.5 pt-2">
+                      <h4 className="font-serif text-lg sm:text-xl text-[#181714] font-normal leading-snug">
+                        {slot.title}
+                      </h4>
+                      {slot.description && (
+                        <p className="text-xs text-[#695F50] font-light leading-relaxed">
+                          {slot.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </ScrollReveal>
               ))}
             </div>
@@ -1068,36 +1387,135 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
         </div>
       </section>
 
-      {/* Section 4B: Project Core Highlights (if defined, e.g. Uptown) */}
+      {/* Section 4B: Project Core Highlights */}
       {project.projectHighlightsList && project.projectHighlightsList.length > 0 && (
-        <section id="project-highlights" className="py-16 sm:py-24 bg-[#ECE7DF] border-b border-[#D8D0C2]">
+        <section id="project-highlights" className="py-16 sm:py-28 bg-[#ECE7DF] text-[#1C1A17] border-b border-[#D8D0C2] overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Centered Canonical Header */}
             <ScrollReveal className="flex flex-col items-center text-center gap-6 border-b border-[#D8D0C0] pb-10 sm:pb-12 mb-12 sm:mb-16">
               <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center gap-2 text-[#99744C] text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-bold mb-3 sm:mb-4 font-sans">
-                  <span className="w-3 h-px bg-[#B8936D]" />
-                  <span>DISTINCTIVE HIGHLIGHTS</span>
+                <div className="flex items-center justify-center gap-2 text-[#99744C] text-[8.5px] sm:text-[10px] tracking-[0.22em] sm:tracking-[0.28em] uppercase font-bold mb-3 sm:mb-4 font-sans whitespace-nowrap max-w-full">
+                  <span className="w-2.5 sm:w-3 h-px bg-[#B8936D] shrink-0" />
+                  <span className="whitespace-nowrap">DISTINCTIVE HIGHLIGHTS</span>
+                  <span className="w-2.5 sm:w-3 h-px bg-[#B8936D] shrink-0" />
                 </div>
-                <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal leading-tight">
-                  Project <span className="italic text-[#B8936D]">Highlights.</span>
+                <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal leading-tight text-center">
+                  Project Highlights <br className="hidden sm:inline" />
+                  <span className="italic text-[#B8936D] font-normal">&amp; Living Flow.</span>
                 </h2>
               </div>
+              <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">
+                {project.id === 'mystic-villas'
+                  ? `Conceived as an ecological sanctuary along the foothills of the Western Ghats, ${project.title} unites biophilic balance, pure Siruvani waters, and attainable farmland ownership.`
+                  : project.subtitle}
+              </p>
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {project.projectHighlightsList.map((highlight, idx) => (
-                <div key={idx} className="border border-[#DCD5C8] bg-[#FAF8F4] p-6 sm:p-8 rounded-xl shadow-none text-center flex flex-col items-center justify-center space-y-2.5 transition-all hover:border-[#CBB8A0]">
-                  <span className="text-[10px] font-sans text-[#B8936D] tracking-widest uppercase font-bold block text-center">
-                    {highlight.title.toUpperCase()}
-                  </span>
-                  <h4 className="font-serif text-2xl text-[#181714] font-normal text-center">
-                    {highlight.title}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-[#5C5346] leading-relaxed font-light text-center">
-                    {highlight.description}
-                  </p>
+            {/* Centered Key Metrics Strip — Architectural 4-column balanced bar */}
+            <ScrollReveal yOffset={20} className="max-w-5xl mx-auto mb-12 sm:mb-16">
+              {project.id === 'mystic-villas' ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 bg-[#FAF8F4] border border-[#DCD5C8] rounded-xl p-4 sm:p-6 shadow-none">
+                  <div className="text-center p-2 sm:p-3 border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-3xl text-[#181714] font-normal block leading-tight">80/20</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Plantation / Built</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3 border-r md:border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-3xl text-[#181714] font-normal block leading-tight">2 Min</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">To Siruvani Waters</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3 border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-3xl text-[#181714] font-normal block leading-tight">22 Cents</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Plantation Plot</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3">
+                    <span className="font-serif text-xl sm:text-3xl text-[#181714] font-normal block leading-tight">10 Min</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">To Isha Adiyogi</span>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 bg-[#FAF8F4] border border-[#DCD5C8] rounded-xl p-4 sm:p-6 shadow-none">
+                  <div className="text-center p-2 sm:p-3 border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-2xl text-[#181714] font-normal block leading-tight">{project.unitsCount}</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Units / Typology</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3 border-r md:border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-2xl text-[#181714] font-normal block leading-tight">{project.areaSqFt.toLocaleString()}</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Total Square Feet</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3 border-r border-[#E5DFD4]">
+                    <span className="font-serif text-xl sm:text-2xl text-[#181714] font-normal block leading-tight">{project.vasthuCompliance}</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Vastu Alignment</span>
+                  </div>
+                  <div className="text-center p-2 sm:p-3">
+                    <span className="font-serif text-xl sm:text-2xl text-[#181714] font-normal block leading-tight">{project.location.split(',')[0]}</span>
+                    <span className="text-[9px] min-[360px]:text-[10px] font-mono uppercase tracking-wider text-[#8C8273] block mt-1">Prime Location</span>
+                  </div>
+                </div>
+              )}
+            </ScrollReveal>
+
+            {/* Architectural 2-Column Highlights Card Grid */}
+            <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 min-w-0">
+              {project.projectHighlightsList.map((highlight, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                return (
+                  <ScrollReveal
+                    key={idx}
+                    delay={idx * 0.08}
+                    className="bg-[#FAF8F5] border border-[#DCD5C8] rounded-2xl p-6 sm:p-8 flex flex-col justify-between hover:border-[#B8936D] transition-all duration-300 shadow-xs min-w-0"
+                  >
+                    <div>
+                      {/* Top Meta Bar */}
+                      <div className="flex items-center justify-between gap-3 mb-4">
+                        <span className="font-mono text-xs sm:text-sm text-[#B8936D] font-bold tracking-widest px-2.5 py-1 rounded bg-[#F2EDE4] border border-[#E0D8CB]">
+                          [{num}]
+                        </span>
+                        <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-[#7D7262] font-semibold">
+                          {highlight.category || 'DISTINCTIVE ATTRIBUTE'}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-serif text-xl sm:text-2xl text-[#181714] font-normal leading-snug mb-3">
+                        {highlight.title}
+                      </h3>
+
+                      {/* Narrative Description */}
+                      <p className="text-xs sm:text-sm text-[#575046] font-light leading-relaxed">
+                        {highlight.detailedText || highlight.description}
+                      </p>
+                    </div>
+
+                    {/* Spec Bullets */}
+                    {highlight.bullets && highlight.bullets.length > 0 && (
+                      <div className="mt-6 pt-5 border-t border-[#EAE3D6] space-y-2.5">
+                        {highlight.bullets.map((bullet, bIdx) => (
+                          <div key={bIdx} className="flex items-start gap-2.5 text-xs text-[#4F473C]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#B8936D] shrink-0 mt-1.5" />
+                            <span className="font-light leading-relaxed">{bullet}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Dedicated Dynamic Picture Slot if present */}
+                    {highlight.slotId && (
+                      <div className="mt-6 pt-5 border-t border-[#EAE3D6] w-full min-w-0">
+                        <DynamicPictureSlot
+                          slotId={highlight.slotId}
+                          title={highlight.slotTitle || highlight.title}
+                          caption={highlight.slotCaption || highlight.description}
+                          aspectHint="Landscape (16:9)"
+                          orientation="landscape"
+                          aspectRatio="16/10"
+                          fitMode="cover"
+                          className="rounded-xl w-full border border-[#D5CDBF]"
+                        />
+                      </div>
+                    )}
+                  </ScrollReveal>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -1116,8 +1534,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
               <h2
                 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#181714] tracking-[-0.03em] font-normal leading-tight sm:leading-[1.15]"
               >
-                Engineering &amp; <br className="hidden sm:inline" />
-                <span className="italic text-[#B8936D]">Material Schedule.</span>
+                Engineering <br className="hidden sm:inline" />
+                <span className="italic text-[#B8936D] font-normal">&amp; Material Schedule.</span>
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">
@@ -1225,8 +1643,8 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
                 <h2
                   className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal leading-tight sm:leading-[1.15]"
                 >
-                  Vilankurichi Locality &amp; <br className="hidden sm:inline" />
-                  <span className="italic text-[#B8936D]">Strategic Advantages.</span>
+                  Vilankurichi Locality <br className="hidden sm:inline" />
+                  <span className="italic text-[#B8936D] font-normal">&amp; Strategic Advantages.</span>
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-[#575046] max-w-2xl leading-relaxed font-light text-center mx-auto">

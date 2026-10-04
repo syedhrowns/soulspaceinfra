@@ -59,8 +59,8 @@ export function VasthuScience() {
           </div>
 
           <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl text-[#181714] tracking-[-0.02em] font-normal mb-4 leading-tight">
-            The Science &amp; Sanctuary of{' '}
-            <span className="italic text-[#B8936D]">Vastu Shastra.</span>
+            The Science <br className="hidden sm:inline" />
+            <span className="italic text-[#B8936D] font-normal">&amp; Sanctuary of Vastu Shastra.</span>
           </h3>
 
           <p className="text-xs sm:text-sm text-[#5C5346] leading-relaxed font-light max-w-xl text-center">

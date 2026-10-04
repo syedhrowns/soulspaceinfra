@@ -1,0 +1,15 @@
+{
+  "enabled": false,
+  "badge": "NEW RELEASE",
+  "text": "Exclusive Preview: Aurum Villas Phase 2 Bookings Open — Schedule a Private Consultation Today",
+  "linkUrl": "/projects/aurum-villas",
+  "linkText": "Explore Residence",
+  "theme": "obsidian-gold",
+  "style": "banner",
+  "targetDate": "2026-10-31T23:59:59",
+  "countdownLabel": "VIP Priority Window Closes In:",
+  "displayScope": "all",
+  "dismissible": true,
+  "urgentPulse": true,
+  "secondaryText": "Over 65% Already Reserved Across North & East Facing Plots"
+}

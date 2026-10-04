@@ -109,7 +109,7 @@ export default function HomePage() {
       <Materiality onOpenProjectByTitle={handleOpenProjectByTitle} />
 
       {/* Disciplines of Practice & Delivery Methodology */}
-      <Services onOpenCommission={() => handleOpenCommission()} />
+      <Services onOpenCommission={handleOpenCommission} />
 
       {/* Monograph Archival Journal & Essays */}
       <MonographJournal />

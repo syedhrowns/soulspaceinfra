@@ -4,14 +4,17 @@ import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { PageLoader } from '@/components/PageLoader';
 import { WhatsAppConcierge } from '@/components/WhatsAppConcierge';
+import { SupabaseSync } from '@/components/SupabaseSync';
 import './globals.css';
 
 import { InfraChatbotWrapper } from '@/components/InfraChatbotWrapper';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   variable: '--font-cormorant',
   weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
@@ -34,11 +37,14 @@ export const metadata: Metadata = {
     canonical: 'https://soulspaceinfra.com',
   },
   title: 'SOUL SPACE INFRASTRUCTURE — Premium Residential & Commercial Developments',
-  description: 'Exclusive luxury residences, landmark commercial workspaces, and community developments by Soul Space Infrastructure across Coimbatore.',
+  description: 'Exclusive Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas by Soul Space Infrastructure across Coimbatore.',
   keywords: [
     'Soul Space Infrastructure',
-    'luxury villas Coimbatore',
-    'commercial workspaces Coimbatore',
+    'Independent Luxury Villas Coimbatore',
+    'Luxury Apartments Coimbatore',
+    'Budget Apartments Coimbatore',
+    'Commercial Workspaces Coimbatore',
+    'Farmhouse Villas Coimbatore',
     'Aurum Villas',
     'ABV Arbor',
     'Dotcom Workspaces',
@@ -69,7 +75,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'SOUL SPACE INFRASTRUCTURE — Premium Residential & Commercial Developments',
-    description: 'Exclusive luxury residences, landmark commercial workspaces, and community developments by Soul Space Infrastructure across Coimbatore.',
+    description: 'Exclusive Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas by Soul Space Infrastructure across Coimbatore.',
     url: 'https://soulspaceinfra.com',
     type: 'website',
     siteName: 'Soul Space Infrastructure',
@@ -86,7 +92,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SOUL SPACE INFRASTRUCTURE — Premium Residential & Commercial Developments',
-    description: 'Exclusive luxury residences, landmark commercial workspaces, and community developments by Soul Space Infrastructure across Coimbatore.',
+    description: 'Exclusive Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas by Soul Space Infrastructure across Coimbatore.',
     images: ['/brand/logo.png'],
   },
 };
@@ -102,7 +108,7 @@ const jsonLd = {
       url: 'https://soulspaceinfra.com',
       logo: 'https://soulspaceinfra.com/brand/logo.png',
       image: 'https://soulspaceinfra.com/brand/logo.png',
-      description: 'Civil construction, premium architectural villas, luxury apartments, and commercial IT developments in Coimbatore, Tamil Nadu.',
+      description: 'Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas in Coimbatore, Tamil Nadu.',
       foundingDate: '2016',
       priceRange: '₹₹₹₹',
       telephone: '+919677771331',
@@ -217,17 +223,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${cormorant.variable} ${jakarta.variable} scroll-smooth`}>
       <head>
         <link rel="preload" href="/brand/logo-mark.png" as="image" />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `body{background-color:#FAF7F2;color:#1D1814;margin:0;padding:0;}img,svg,video{max-width:100%;height:auto;}#global-page-loader{position:fixed!important;inset:0!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;background-color:#F7F5F0!important;z-index:999999!important;display:flex!important;align-items:center!important;justify-content:center!important;}`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(l){if(l.search&&l.search[1]==='/'){var p=l.search.slice(1).split('&').map(function(s){return s.replace(/~and~/g,'&')}).join('?');window.history.replaceState(null,null,l.pathname.slice(0,-1)+p+l.hash)}})(window.location);`,
-          }}
-        />
       </head>
       <body className="font-sans antialiased bg-[#F7F5F0] text-[#1D1B18] selection:bg-[#B8936D] selection:text-white min-h-screen" suppressHydrationWarning>
+        <AnnouncementBar />
+        <SupabaseSync />
         <PageLoader />
         <SmoothScroll>
           {children}

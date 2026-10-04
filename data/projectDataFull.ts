@@ -8,6 +8,16 @@ export interface FloorPlanScheduleItem {
   udsSqFt: string;
 }
 
+export interface FloorLevelPlan {
+  floorLevel: 'ground' | 'first' | 'second' | 'terrace';
+  floorTitle: string;
+  area: string;
+  slotId: string;
+  caption?: string;
+  aspectHint?: string;
+  orientation?: 'landscape' | 'portrait' | 'square' | 'wide';
+}
+
 export interface UnitFloorPlanItem {
   id: string;
   unitName: string;
@@ -19,6 +29,13 @@ export interface UnitFloorPlanItem {
   isometricSlotId?: string;
   planOrientation?: 'landscape' | 'portrait' | 'square' | 'wide';
   isometricOrientation?: 'landscape' | 'portrait' | 'square';
+  floors?: FloorLevelPlan[];
+  singleHouseSlot?: boolean;
+  houseSlotId?: string;
+  houseSlotTitle?: string;
+  houseSlotCaption?: string;
+  features?: string[];
+  description?: string;
 }
 
 export interface ProximityItem {
@@ -40,6 +57,12 @@ export interface LocationAdvantage {
 export interface ProjectHighlight {
   title: string;
   description: string;
+  category?: string;
+  detailedText?: string;
+  bullets?: string[];
+  slotId?: string;
+  slotTitle?: string;
+  slotCaption?: string;
 }
 
 export interface FullProjectDetail {
@@ -75,6 +98,11 @@ export interface FullProjectDetail {
   }[];
   floorPlanSchedule?: FloorPlanScheduleItem[];
   schedulePictureSlotId?: string;
+  schedulePictureSlotTitle?: string;
+  schedulePictureSlotCaption?: string;
+  typicalFloorPlanSlotId?: string;
+  typicalFloorPlanSlotTitle?: string;
+  typicalFloorPlanSlotCaption?: string;
   unitFloorPlans?: UnitFloorPlanItem[];
   spacesDescription?: {
     title: string;
@@ -116,12 +144,11 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     tagline: 'CLOSE TO NATURE, NEAR TO YOUR WORLD',
     subtitle: 'LUXURY GATED COMMUNITY VILLAS NEAR ISHA — SEMMEDU, COIMBATORE',
     typology: 'residential',
-    typologyLabel: 'Luxury Farmhouse',
+    typologyLabel: 'Farmhouse Villas',
     location: 'Semmedu, Coimbatore',
     address: 'Semmedu, Near Isha Yoga Centre & Adiyogi, Coimbatore, Tamil Nadu, India',
     year: 2025,
     status: '',
-    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790578902/mystic-e-brochure.pdf',
     areaSqFt: 2500,
     areaM2: 232,
     unitsCount: '22 Cents+ Plantation Land with 2500 sqft Farmhouse',
@@ -142,16 +169,49 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     ],
     projectHighlightsList: [
       {
-        title: '80-20 Concept',
-        description: '80% lush coconut plantation and 20% built luxury farmhouse with a private plunge pool.',
+        title: '80-20 Ecological Concept',
+        category: 'Biophilic Masterplanning',
+        description: '80% preserved coconut plantation and 20% built luxury farmhouse with a private plunge pool.',
+        detailedText: 'Rooted in a conscious ecological ratio, 80% of each 22+ cent parcel is strictly dedicated to living nature—500+ heritage coconut palms, natural topsoil, and tropical biodiversity. The remaining 20% accommodates a bespoke 2,500 sq.ft duplex farmhouse with an integrated private plunge pool, creating a microclimate up to 3°C cooler than the city.',
+        slotId: 'mystic_img_concept',
+        slotTitle: '80-20 Biophilic Plantation & Green Canopy',
+        slotCaption: '80% preserved heritage coconut grove with 20% built luxury farmhouse footprint.',
+        bullets: [
+          '80% dedicated to native coconut groves and fruit trees',
+          '20% built footprint ensuring permanent natural privacy',
+          'Private plunge pool integrated into every villa garden',
+          'Cooler microclimate and unobstructed mountain breezes',
+        ],
       },
       {
-        title: 'At the Heart of Siruvani',
+        title: 'At the Heart of Siruvani Basin',
+        category: 'Pristine Mineral Water Source',
         description: 'Positioned 2 minutes from Siruvani river beds with world-renowned natural mineral water.',
+        detailedText: 'Positioned right at the foothills of the Western Ghats and merely 2 minutes from the Siruvani river beds, residents enjoy unadulterated access to Siruvani water—globally renowned as the second sweetest natural freshwater in the world. Sourced from virgin mountain catchments, every drop is naturally rich in vital minerals without chemical additives.',
+        slotId: 'mystic_img_siruvani',
+        slotTitle: 'Siruvani River Basin & Plantation Waterscape',
+        slotCaption: 'Pristine mountain mineral waters and flowing natural waterscapes across the estate.',
+        bullets: [
+          '2 minutes from active Siruvani river catchment',
+          'Sweetest natural mineral water straight to your villa tap',
+          'Rich in natural trace minerals with zero chemical processing',
+          'Perennial water security for landscaping and domestic use',
+        ],
       },
       {
-        title: 'Attainable Luxury',
+        title: 'Attainable Generational Luxury',
+        category: 'Wellness & High Investment Yield',
         description: 'Eco-conscious private farmland retreat combining tranquil wellness with high investment value.',
+        detailedText: 'Unlike conventional urban apartments that face structural depreciation, Mystic Villas offers expansive 22-cent (or larger) clear-title farmland plots coupled with a luxury farmhouse. Owners gain both a private spiritual retreat 10 minutes from Isha Adiyogi and high-yield agricultural farmland that compounds in value over generations.',
+        slotId: 'mystic_img_farmland',
+        slotTitle: '22 Cents Freehold Farmland & Luxury Farmhouse',
+        slotCaption: 'Generational clear-title plantation acreage coupled with bespoke residential villa architecture.',
+        bullets: [
+          '22 Cents+ individual registered freehold plantation land',
+          '10 minutes drive from Isha Yoga Centre & Adiyogi',
+          'Substantial land appreciation in high-growth tourism corridor',
+          'Socially conscious luxury with sustainable long-term value',
+        ],
       },
     ],
     amenitiesList: [
@@ -167,12 +227,24 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     ],
     amenitiesPictureSlots: [
       {
-        slotId: 'mystic_img_amenities',
-        title: 'Amenities & Private Plunge Pool',
-        description: 'Private plunge pool, Koi fish waterscape, entrance arch, paver block roads & 24/7 security.',
-        orientation: 'wide',
+        slotId: 'mystic_img_arch',
+        title: 'GRAND ENTRANCE ARCH & BELL GATE',
+        description: 'Monumental stone pillar entry pavilion with hanging bronze bells, paver roads, and lush palm canopy.',
+        orientation: 'landscape',
+      },
+      {
+        slotId: 'mystic_img_pool',
+        title: 'PRIVATE PLUNGE POOL & VILLA RETREAT',
+        description: 'Private plunge pool integrated into every villa with illuminated night water features.',
+        orientation: 'landscape',
       },
     ],
+    schedulePictureSlotId: 'mystic_img_iso_01',
+    schedulePictureSlotTitle: '3D Isometric Floor Plan — View 01',
+    schedulePictureSlotCaption: 'Three-dimensional isometric visualization of the ground & first floor layout.',
+    typicalFloorPlanSlotId: 'mystic_img_iso_02',
+    typicalFloorPlanSlotTitle: '3D Isometric Floor Plan — View 02',
+    typicalFloorPlanSlotCaption: 'Complementary axonometric perspective of room volumes and biophilic flow.',
     floorPlanSchedule: [
       {
         sno: '01',
@@ -192,10 +264,41 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
         area: '2500 Sq.Ft. Built-up on 22+ Cents Land',
         facing: 'East / North East Vasthu',
         uds: '22 Cents Plot',
-        planSlotId: 'mystic_img_plan_01',
-        isometricSlotId: 'mystic_img_plan_02',
+        singleHouseSlot: true,
+        houseSlotId: 'mystic_img_house',
+        houseSlotTitle: '2,500 Sq.Ft. Biophilic Farmhouse Residence',
+        houseSlotCaption: 'Bespoke two-story luxury nature villa with private plunge pool, double portico, and panoramic coconut grove views.',
+        planSlotId: 'mystic_img_house',
         planOrientation: 'landscape',
-        isometricOrientation: 'landscape',
+        features: [
+          '22 Cents+ Coconut Grove Plot',
+          'Private Plunge Pool Included',
+          'Siruvani River Bed Water',
+          '100% Vasthu & Manaiyadi Compliant',
+          'Covered Double Car Portico',
+          'Double-Height Living Pavilion',
+        ],
+        description: 'An exclusive 2,500 sq.ft biophilic residence engineered on an 80-20 ecological balance—80% pristine coconut grove and 20% built nature home. Features seamless indoor-outdoor living, generous master retreats with forest vistas, and a private plunge pool for serene daily rejuvenation.',
+      },
+    ],
+    spacesDescription: [
+      {
+        title: 'GATED COMMUNITY NATURE VILLAS & TREE-LINED AVENUES',
+        text: 'Eco-conscious tree-lined paver avenues and contemporary farmhouse residences situated in lush 2.5-acre coconut plantations.',
+        slotId: 'mystic_img_community',
+        orientation: 'landscape',
+      },
+      {
+        title: 'BESPOKE 2,500 SQ.FT. FARMHOUSE ARCHITECTURE',
+        text: 'Architectural duplex volume with natural timber louvers, private plunge pool, and panoramic coconut plantation vistas.',
+        slotId: 'mystic_img_architecture',
+        orientation: 'landscape',
+      },
+      {
+        title: 'CONTEMPORARY FARMHOUSE ELEVATION',
+        text: 'Front architectural elevation featuring covered double vehicular portico, open terrace pergolas, and Siruvani water networks.',
+        slotId: 'mystic_img_elevation',
+        orientation: 'portrait',
       },
     ],
     specifications: [
@@ -287,9 +390,15 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     allPictureSlots: [
       { slotId: 'mystic_img_01', title: 'MYSTIC — Coconut Plantation & Luxury Villa', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
       { slotId: 'mystic_img_8020', title: '80-20 Concept (80% Plantation & 20% Nature Homes)', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'mystic_img_plan_01', title: 'Floor Plan - Picture 1', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'mystic_img_plan_02', title: 'Floor Plan - Picture 2', aspectHint: 'Landscape (4:3)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'mystic_img_amenities', title: 'Private Plunge Pool & Amenities', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'mystic_img_iso_01', title: '3D Isometric Floor Plan — View 01', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Three-dimensional isometric visualization of the ground & first floor layout.' },
+      { slotId: 'mystic_img_iso_02', title: '3D Isometric Floor Plan — View 02', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Complementary axonometric perspective of room volumes and biophilic flow.' },
+      { slotId: 'mystic_img_house', title: '2,500 Sq.Ft. Biophilic Farmhouse Residence', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Bespoke two-story luxury nature villa with private plunge pool, double portico, and panoramic coconut grove views.' },
+      { slotId: 'mystic_img_arch', title: 'Monumental Temple Bell Entrance Arch', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Monumental stone pillar entry pavilion with hanging bronze bells, paver roads, and lush palm canopy.' },
+      { slotId: 'mystic_img_pool', title: 'Private Plunge Pool & Villa Retreat', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Private plunge pool integrated into every villa with illuminated night water features.' },
+      { slotId: 'mystic_img_waterscape', title: 'Coconut Grove & Koi Fish Waterscape', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Continuous meandering reflecting water network with paver bridges and native landscaping.' },
+      { slotId: 'mystic_img_community', title: 'Gated Community Nature Villas & Tree-Lined Avenues', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Eco-conscious tree-lined paver avenues and contemporary farmhouse residences situated in lush 2.5-acre coconut plantations.' },
+      { slotId: 'mystic_img_architecture', title: 'Bespoke 2,500 Sq.Ft. Farmhouse Architecture', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Architectural duplex volume with natural timber louvers, private plunge pool, and panoramic coconut plantation vistas.' },
+      { slotId: 'mystic_img_elevation', title: 'Contemporary Farmhouse Elevation', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: 'Front architectural elevation featuring covered double vehicular portico, open terrace pergolas, and Siruvani water networks.' },
     ],
   },
   'aurum-villas': {
@@ -300,12 +409,11 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     tagline: 'A WORLD OF LUXURY AWAITS',
     subtitle: 'Own a piece of paradise — collection of 33, three-bedroom luxury villas in Vilankurichi (2,132 – 3,012 Sq.Ft.).',
     typology: 'residential',
-    typologyLabel: '33 Luxury Villas',
+    typologyLabel: 'Independent Luxury Villas',
     location: 'Vilankurichi, Coimbatore',
     address: 'SF No.189,190 Ashok J nagar R J Matriculation School Back side Vilankurichi Coimbatore - 641035',
     year: 2024,
     status: '',
-    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566552/Aurum_E_brochure.pdf',
     areaSqFt: 3012,
     areaM2: 280,
     unitsCount: '33 Three-Bedroom Luxury Villas (2,132 – 3,012 Sq.Ft.)',
@@ -361,40 +469,120 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     ],
     unitFloorPlans: [
       {
+        id: 'aurum-north-facing',
+        unitName: 'NORTH FACING VILLA',
+        subtitle: 'Ground Floor: 1,566 Sqft · First Floor: 1,376 Sqft',
+        area: '3,012 SQ.FT',
+        facing: 'North Facing',
+        planSlotId: 'aurum_img_plan_north_ground',
+        planOrientation: 'landscape',
+        floors: [
+          {
+            floorLevel: 'ground',
+            floorTitle: 'Ground Floor Plan',
+            area: '1,566 Sq.Ft.',
+            slotId: 'aurum_img_plan_north_ground',
+            caption: 'North Facing Villa — Ground Floor layout (1,566 Sq.Ft.) featuring living pavilion, dining, modular kitchen, ensuite bedroom, portico, and utility.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+          {
+            floorLevel: 'first',
+            floorTitle: 'First Floor Plan',
+            area: '1,376 Sq.Ft.',
+            slotId: 'aurum_img_plan_north_first',
+            caption: 'North Facing Villa — First Floor layout (1,376 Sq.Ft.) featuring two master suites with private baths, family lounge, covered balcony, and open terrace.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+        ],
+      },
+      {
         id: 'aurum-east-facing',
         unitName: 'EAST FACING VILLA',
-        subtitle: 'Ground Floor: 1016 Sqft · First Floor: 1016 Sqft',
+        subtitle: 'Ground Floor: 1,016 Sqft · First Floor: 1,016 Sqft',
         area: '2,132 SQ.FT',
         facing: 'East Facing',
-        planSlotId: 'aurum_img_plan_east',
+        planSlotId: 'aurum_img_plan_east_ground',
         planOrientation: 'landscape',
+        floors: [
+          {
+            floorLevel: 'ground',
+            floorTitle: 'Ground Floor Plan',
+            area: '1,016 Sq.Ft.',
+            slotId: 'aurum_img_plan_east_ground',
+            caption: 'East Facing Villa — Ground Floor layout (1,016 Sq.Ft.) featuring expansive living hall, dining space, modern kitchen, and guest bedroom suite.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+          {
+            floorLevel: 'first',
+            floorTitle: 'First Floor Plan',
+            area: '1,016 Sq.Ft.',
+            slotId: 'aurum_img_plan_east_first',
+            caption: 'East Facing Villa — First Floor layout (1,016 Sq.Ft.) featuring master suites, family entertainment zone, private sit-out, and open-to-sky terrace.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+        ],
       },
       {
         id: 'aurum-west-facing',
         unitName: 'WEST FACING VILLA',
-        subtitle: 'Ground Floor: 1449 Sqft · First Floor: 1322 Sqft',
+        subtitle: 'Ground Floor: 1,449 Sqft · First Floor: 1,322 Sqft',
         area: '2,883 SQ.FT',
         facing: 'West Facing',
-        planSlotId: 'aurum_img_plan_west',
+        planSlotId: 'aurum_img_plan_west_ground',
         planOrientation: 'landscape',
+        floors: [
+          {
+            floorLevel: 'ground',
+            floorTitle: 'Ground Floor Plan',
+            area: '1,449 Sq.Ft.',
+            slotId: 'aurum_img_plan_west_ground',
+            caption: 'West Facing Villa — Ground Floor layout (1,449 Sq.Ft.) featuring majestic double-height living hall, dining pavilion, modular kitchen, and ensuite.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+          {
+            floorLevel: 'first',
+            floorTitle: 'First Floor Plan',
+            area: '1,322 Sq.Ft.',
+            slotId: 'aurum_img_plan_west_first',
+            caption: 'West Facing Villa — First Floor layout (1,322 Sq.Ft.) featuring upper bedrooms with attached bathrooms, family lounge, and panoramic terrace.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+        ],
       },
       {
         id: 'aurum-south-facing',
         unitName: 'SOUTH FACING VILLA',
-        subtitle: 'Ground Floor: 1462 Sqft · First Floor: 1241 Sqft',
+        subtitle: 'Ground Floor: 1,462 Sqft · First Floor: 1,241 Sqft',
         area: '2,788 SQ.FT',
         facing: 'South Facing',
-        planSlotId: 'aurum_img_plan_south',
+        planSlotId: 'aurum_img_plan_south_ground',
         planOrientation: 'landscape',
-      },
-      {
-        id: 'aurum-north-facing',
-        unitName: 'NORTH FACING VILLA',
-        subtitle: 'Ground Floor: 1566 Sqft · First Floor: 1376 Sqft',
-        area: '3,012 SQ.FT',
-        facing: 'North Facing',
-        planSlotId: 'aurum_img_plan_north',
-        planOrientation: 'landscape',
+        floors: [
+          {
+            floorLevel: 'ground',
+            floorTitle: 'Ground Floor Plan',
+            area: '1,462 Sq.Ft.',
+            slotId: 'aurum_img_plan_south_ground',
+            caption: 'South Facing Villa — Ground Floor layout (1,462 Sq.Ft.) engineered with 100% Vastu compliance, expansive living lounge, kitchen, and ensuite.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+          {
+            floorLevel: 'first',
+            floorTitle: 'First Floor Plan',
+            area: '1,241 Sq.Ft.',
+            slotId: 'aurum_img_plan_south_first',
+            caption: 'South Facing Villa — First Floor layout (1,241 Sq.Ft.) featuring spacious bedrooms, attached designer baths, sit-out balcony, and terrace space.',
+            aspectHint: 'Landscape (16:10)',
+            orientation: 'landscape',
+          },
+        ],
       },
     ],
     spacesDescription: [
@@ -551,10 +739,18 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
       { slotId: 'aurum_img_richness', title: 'Homes that Celebrate the Richness of Life', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
       { slotId: 'aurum_img_private', title: 'Specially Crafted for Private Lifestyle', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
       { slotId: 'aurum_img_living', title: 'Inviting Living Room', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'aurum_img_plan_east', title: 'East Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'aurum_img_plan_west', title: 'West Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'aurum_img_plan_south', title: 'South Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'aurum_img_plan_north', title: 'North Facing Villa Floor Plan', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      // North Facing Villa (Ground & First Floor)
+      { slotId: 'aurum_img_plan_north_ground', title: 'North Facing Villa — Ground Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Ground Floor layout (1,566 Sq.Ft.)' },
+      { slotId: 'aurum_img_plan_north_first', title: 'North Facing Villa — First Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'First Floor layout (1,376 Sq.Ft.)' },
+      // East Facing Villa (Ground & First Floor)
+      { slotId: 'aurum_img_plan_east_ground', title: 'East Facing Villa — Ground Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Ground Floor layout (1,016 Sq.Ft.)' },
+      { slotId: 'aurum_img_plan_east_first', title: 'East Facing Villa — First Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'First Floor layout (1,016 Sq.Ft.)' },
+      // West Facing Villa (Ground & First Floor)
+      { slotId: 'aurum_img_plan_west_ground', title: 'West Facing Villa — Ground Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Ground Floor layout (1,449 Sq.Ft.)' },
+      { slotId: 'aurum_img_plan_west_first', title: 'West Facing Villa — First Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'First Floor layout (1,322 Sq.Ft.)' },
+      // South Facing Villa (Ground & First Floor)
+      { slotId: 'aurum_img_plan_south_ground', title: 'South Facing Villa — Ground Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Ground Floor layout (1,462 Sq.Ft.)' },
+      { slotId: 'aurum_img_plan_south_first', title: 'South Facing Villa — First Floor Plan', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'First Floor layout (1,241 Sq.Ft.)' },
     ],
   },
 
@@ -566,12 +762,11 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     tagline: 'SIGN UP FOR AN UNRIVALLED HOME EXPERIENCE',
     subtitle: 'HEART OF THE CITY | 5 MINUTES FROM RACE COURSE — 12 LUXURY FLATS | 4 BHK & 3 BHK UNITS',
     typology: 'residential',
-    typologyLabel: 'Luxury Residences',
+    typologyLabel: 'Luxury Apartments',
     location: 'Ramanathapuram, Coimbatore',
     address: 'Plot no.18 G square Blue Crest near gem hospital Ramanathapuram Cbe-641045',
     year: 2025,
     status: '',
-    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566392/ABV_ARBOR_BROCHURE_FOR_PREVIEW_-_20.4.24.pdf',
     areaSqFt: 2395,
     areaM2: 222,
     unitsCount: '12 Luxury Flats (4 BHK & 3 BHK)',
@@ -674,13 +869,19 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
       {
         slotId: 'abvarbor_img_12',
         title: 'COMMUNITY | PARTY HALL',
-        description: '',
+        description: 'Multi-purpose banquet and private community gathering hall.',
         orientation: 'landscape',
       },
       {
         slotId: 'abvarbor_img_13',
         title: 'GYM / INDOOR GAMES',
-        description: '',
+        description: 'State-of-the-art modern fitness suite and indoor recreation center.',
+        orientation: 'landscape',
+      },
+      {
+        slotId: 'abvarbor_img_16',
+        title: 'TERRACE GARDEN | KIDS PLAY AREA',
+        description: 'Lush landscaped rooftop terrace retreat with dedicated safe children’s play area.',
         orientation: 'landscape',
       },
     ],
@@ -785,8 +986,9 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
       { slotId: 'abvarbor_img_11', title: 'Extravagant Living & Dining Space', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
       { slotId: 'abvarbor_img_12', title: 'Community | Party Hall', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
       { slotId: 'abvarbor_img_13', title: 'Gym / Indoor Games', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: '' },
-      { slotId: 'abvarbor_img_14', title: 'Bedroom Suite', aspectHint: 'Portrait (3:4)', suggestedOrientation: 'portrait', caption: '' },
       { slotId: 'abvarbor_img_15', title: 'Gourmet Kitchen', aspectHint: 'Landscape (16:9)', suggestedOrientation: 'landscape', caption: '' },
+      { slotId: 'abvarbor_img_16', title: 'Terrace Garden | Kids Play Area', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Landscaped rooftop terrace garden with children’s play amenities and recreational open lawn.' },
+      { slotId: 'abvarbor_img_terrace', title: 'Terrace Garden | Kids Play Area', aspectHint: 'Landscape (16:10)', suggestedOrientation: 'landscape', caption: 'Landscaped rooftop terrace garden with children’s play amenities and recreational open lawn.' },
     ],
   },
 
@@ -798,12 +1000,11 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     tagline: '“LUXURY SPACE IN AN UNBEATABLE PRICE”',
     subtitle: 'A collaborative 110 units of 1(BHK), 2(BHK) & 3(BHK) thoughtfully crafted budget apartments in Eachanari.',
     typology: 'residential',
-    typologyLabel: 'Crafted Residences',
+    typologyLabel: 'Budget Apartments',
     location: 'Eachanari, Coimbatore',
     address: 'SF No.629/10A Chettipalayam Road Eachanari Site Coimbatore',
     year: 2025,
     status: '',
-    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566136/9X9inches_Soulspace_uptown_Brochure_5.pdf',
     areaSqFt: 1450,
     areaM2: 135,
     unitsCount: '110 Units (1 BHK, 2 BHK & 3 BHK)',
@@ -1040,7 +1241,6 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
     address: 'No.58B, Parameshwaran Layout Road, PN Palayam, Coimbatore, Coimbatore, Tamil Nadu, 641037',
     year: 2024,
     status: '',
-    brochurePdfUrl: 'https://res.cloudinary.com/ty5psz5d/image/upload/v1790566130/DOTCOM.pdf',
     areaSqFt: 2054,
     areaM2: 191,
     unitsCount: '16 Workspaces',
@@ -1077,6 +1277,7 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
       'Driver Waiting Lounge & Restrooms',
     ],
     schedulePictureSlotId: 'dotcom_img_02',
+    typicalFloorPlanSlotId: 'dotcom_img_03',
     floorPlanSchedule: [
       { sno: '1', floor: '1st Floor', unitNo: '101', type: 'Office Space', facing: 'West', saleableAreaSqFt: '2054', udsSqFt: '797' },
       { sno: '2', floor: '1st Floor', unitNo: '102', type: 'Office Space', facing: 'North', saleableAreaSqFt: '1316', udsSqFt: '511' },
@@ -1123,14 +1324,6 @@ export const FULL_PROJECTS_DATA: Record<string, FullProjectDetail> = {
         uds: '763 UDS',
         planSlotId: 'dotcom_img_07',
         planOrientation: 'landscape',
-      },
-    ],
-    amenitiesPictureSlots: [
-      {
-        slotId: 'dotcom_img_03',
-        title: 'FLOOR PLAN',
-        description: '',
-        orientation: 'wide',
       },
     ],
     specifications: [

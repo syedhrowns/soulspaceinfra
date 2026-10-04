@@ -40,8 +40,8 @@ export function Studio() {
               <span>ABOUT SOUL SPACE INFRASTRUCTURE</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal">
-              Quality, Functionality &amp; <br className="hidden sm:inline" />
-              <span className="italic text-[#B8936D]">Enduring Value.</span>
+              Quality, Functionality <br className="hidden sm:inline" />
+              <span className="italic text-[#B8936D] font-normal">&amp; Enduring Value.</span>
             </h2>
           </div>
 

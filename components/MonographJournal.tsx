@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Clock, ArrowUpRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { JOURNAL_ESSAYS, JournalEssay } from '@/data/journal';
@@ -9,6 +10,11 @@ import { useScrollLock } from '@/lib/scrollLock';
 
 export function MonographJournal() {
   const [selectedEssay, setSelectedEssay] = useState<JournalEssay | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Universal background scroll lock with Lenis pause
   useScrollLock(!!selectedEssay);
@@ -24,8 +30,8 @@ export function MonographJournal() {
               <span>THE TECHNICAL JOURNAL</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#141311] tracking-[-0.03em] font-normal">
-              Insights on Engineering &amp; <br className="hidden sm:inline" />
-              <span className="italic text-[#B8936D]">Civil Craft.</span>
+              Insights on Engineering <br className="hidden sm:inline" />
+              <span className="italic text-[#B8936D] font-normal">&amp; Civil Craft.</span>
             </h2>
           </div>
 
@@ -88,74 +94,77 @@ export function MonographJournal() {
           ))}
         </StaggerContainer>
 
-        {/* Full Essay Reading Modal */}
-        <AnimatePresence>
-          {selectedEssay && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              data-lenis-prevent
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-8 overflow-y-auto overscroll-contain"
-              onClick={() => setSelectedEssay(null)}
-            >
+        {/* Full Essay Reading Modal — Portaled to document.body */}
+        {mounted && typeof document !== 'undefined' && createPortal(
+          <AnimatePresence>
+            {selectedEssay && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
                 data-lenis-prevent
-                className="bg-[#FAF8F5]/95 backdrop-blur-2xl text-[#1D1B18] w-full max-w-3xl rounded-xl p-4 sm:p-12 border border-[#E5DFD4] my-auto max-h-[90vh] overflow-y-auto overscroll-contain shadow-none"
-                onClick={(e) => e.stopPropagation()}
+                className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-8 overflow-y-auto overscroll-contain"
+                onClick={() => setSelectedEssay(null)}
               >
-              <div className="flex items-center justify-between border-b border-[#DDD5C7] pb-4 mb-6">
-                <span className="font-sans text-xs text-[#B8936D] tracking-widest uppercase">
-                  {selectedEssay.issue} · {selectedEssay.date}
-                </span>
-                <button
-                  onClick={() => setSelectedEssay(null)}
-                  className="p-1 text-[#8C8070] cursor-pointer rounded-full bg-transparent border border-transparent hover:border-[#CBB8A0] transition-colors min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
-                  aria-label="Close article modal"
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+                  data-lenis-prevent
+                  className="bg-[#FAF8F5]/95 backdrop-blur-2xl text-[#1D1B18] w-full max-w-3xl rounded-xl p-4 sm:p-12 border border-[#E5DFD4] my-auto max-h-[90vh] overflow-y-auto overscroll-contain shadow-none"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+                <div className="flex items-center justify-between border-b border-[#DDD5C7] pb-4 mb-6">
+                  <span className="font-sans text-xs text-[#B8936D] tracking-widest uppercase">
+                    {selectedEssay.issue} · {selectedEssay.date}
+                  </span>
+                  <button
+                    onClick={() => setSelectedEssay(null)}
+                    className="p-1 text-[#8C8070] cursor-pointer rounded-full bg-transparent border border-transparent hover:border-[#CBB8A0] transition-colors min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
+                    aria-label="Close article modal"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
 
-              <h2 className="font-serif text-xl sm:text-4xl text-[#141311] leading-tight mb-2">
-                {selectedEssay.title}
-              </h2>
-              <p className="font-serif text-xs sm:text-base text-[#B8936D] mb-6">
-                {selectedEssay.subtitle}
-              </p>
+                <h2 className="font-serif text-xl sm:text-4xl text-[#141311] leading-tight mb-2">
+                  {selectedEssay.title}
+                </h2>
+                <p className="font-serif text-xs sm:text-base text-[#B8936D] mb-6">
+                  {selectedEssay.subtitle}
+                </p>
 
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-xs font-sans text-[#786E5F] border-y border-[#E5DFD4] py-2.5 sm:py-3 mb-6 sm:mb-8 bg-[#F0ECE3] px-3 sm:px-4 rounded-xl">
-                <span className="font-semibold text-[#181715]">{selectedEssay.author}</span>
-                <span>·</span>
-                <span>{selectedEssay.role}</span>
-                <span>·</span>
-                <span>{selectedEssay.readTime}</span>
-              </div>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-xs font-sans text-[#786E5F] border-y border-[#E5DFD4] py-2.5 sm:py-3 mb-6 sm:mb-8 bg-[#F0ECE3] px-3 sm:px-4 rounded-xl">
+                  <span className="font-semibold text-[#181715]">{selectedEssay.author}</span>
+                  <span>·</span>
+                  <span>{selectedEssay.role}</span>
+                  <span>·</span>
+                  <span>{selectedEssay.readTime}</span>
+                </div>
 
-              <div className="space-y-4 sm:space-y-6 text-xs sm:text-base text-[#3E372E] leading-relaxed font-light">
-                {selectedEssay.content.map((p, idx) => (
-                  <p key={idx}>{p}</p>
-                ))}
-              </div>
+                <div className="space-y-4 sm:space-y-6 text-xs sm:text-base text-[#3E372E] leading-relaxed font-light">
+                  {selectedEssay.content.map((p, idx) => (
+                    <p key={idx}>{p}</p>
+                  ))}
+                </div>
 
-              <div className="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-[#DDD5C7] flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 text-[10px] sm:text-xs text-[#7A6F60] text-center sm:text-left">
-                <span>Archived in Soul Space Technical Library</span>
-                <button
-                  onClick={() => setSelectedEssay(null)}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2.5 bg-[#181715] text-white text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-colors cursor-pointer border border-[#2D2A26] hover:border-[#CBB8A0] shadow-none min-h-[44px] sm:min-h-0 flex items-center justify-center"
-                >
-                  Close Article
-                </button>
-              </div>
+                <div className="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-[#DDD5C7] flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 text-[10px] sm:text-xs text-[#7A6F60] text-center sm:text-left">
+                  <span>Archived in Soul Space Technical Library</span>
+                  <button
+                    onClick={() => setSelectedEssay(null)}
+                    className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2.5 bg-[#181715] text-white text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-colors cursor-pointer border border-[#2D2A26] hover:border-[#CBB8A0] shadow-none min-h-[44px] sm:min-h-0 flex items-center justify-center"
+                  >
+                    Close Article
+                  </button>
+                </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
       </div>
     </section>
   );

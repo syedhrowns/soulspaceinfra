@@ -6,6 +6,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { motion, AnimatePresence } from 'motion/react';
 import { SmoothAutoHeight } from '@/components/SmoothAutoHeight';
 import { PROJECTS } from '@/data/projects';
+import { submitInquiry } from '@/lib/supabase';
 
 interface CommissionEstimatorProps {
   initialTypology?: string;
@@ -37,9 +38,11 @@ const CUSTOM_OPTION: CustomProjectOption = {
   structuralConcept: 'Earthquake-resistant RCC foundation with M25 grade concrete and high-density precision block masonry.',
   sustainabilityRating: '100% Vasthu & Manaiyadi Compliant',
   unitOptions: [
-    'Custom Luxury Villa / Bungalow',
-    'Commercial Office / IT Workspaces',
-    'Premium Apartment Development',
+    'Independent Luxury Villa',
+    'Luxury Apartment',
+    'Budget Apartment',
+    'Commercial Workspace',
+    'Farmhouse Villa',
     'Turnkey Civil Contract Consultation',
   ],
   specs: [
@@ -57,10 +60,24 @@ export function CommissionEstimator({ initialTypology, initialProjectName }: Com
       const match = PROJECTS.find((p) => p.title.toLowerCase().includes(initialProjectName.toLowerCase()));
       if (match) return match.id;
     }
+    if (initialTypology) {
+      const match = PROJECTS.find((p) => p.id === initialTypology || p.id.startsWith(initialTypology));
+      if (match) return match.id;
+    }
     return null;
   };
 
   const [selectedId, setSelectedId] = useState<string | null>(getInitialProjectId());
+
+  useEffect(() => {
+    if (initialTypology) {
+      const match = PROJECTS.find((p) => p.id === initialTypology || p.id.startsWith(initialTypology));
+      if (match) {
+        setSelectedId(match.id);
+        setSelectedUnit('');
+      }
+    }
+  }, [initialTypology]);
 
   // Form state
   const [name, setName] = useState('');
@@ -177,6 +194,29 @@ export function CommissionEstimator({ initialTypology, initialProjectName }: Com
     setIsSubmitting(true);
     const randomDocket = `INQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     setDocketNumber(randomDocket);
+
+    // Save inquiry to backend (Cloudflare D1 5GB Free SQL & Supabase)
+    const inquiryPayload = {
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      project_id: selectedId || '',
+      project_title: currentTitle,
+      typology: activeProject ? activeProject.typologyLabel : CUSTOM_OPTION.typologyLabel,
+      unit_preference: selectedUnit || currentUnitOptions[0] || 'Standard Consultation',
+      target_year: targetYear,
+      notes: notes.trim(),
+      docket_number: randomDocket,
+    };
+
+    fetch('/api/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(inquiryPayload),
+    }).catch(() => {});
+
+    submitInquiry(inquiryPayload).catch(() => {});
+
     setTimeout(() => {
       setIsSubmitted(true);
       setIsSubmitting(false);
@@ -253,7 +293,7 @@ Email: soulspaceinfrastructure@gmail.com
                 SELECT A SOUL SPACE DEVELOPMENT
               </span>
               <p className="text-xs text-[#6B6153] mb-4 font-light">
-                Choose one of our four active developments in Coimbatore or request a custom turnkey build.
+                Choose one of our five active developments in Coimbatore or request a custom turnkey build.
               </p>
 
               {/* Development Cards Selection */}
@@ -389,7 +429,9 @@ Email: soulspaceinfrastructure@gmail.com
 
                 <div className="pt-2 border-t border-[#E0D9CC]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs flex-wrap min-w-0">
                   <a
-                    href="https://wa.me/919677771331"
+                    href={`https://wa.me/919677771331?text=${encodeURIComponent(
+                      `Hello Soul Space Infrastructure, I am reviewing ${currentTitle} (${currentLocation}) in your Project Feasibility Estimator and would like to consult with your engineering team regarding structural specifications and turnkey execution.`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 font-medium text-[#181715] hover:text-[#B8936D] transition-colors shrink-0"
@@ -398,7 +440,9 @@ Email: soulspaceinfrastructure@gmail.com
                     <span>WhatsApp: +91 96777 71331</span>
                   </a>
                   <a
-                    href="https://wa.me/919159133331"
+                    href={`https://wa.me/919159133331?text=${encodeURIComponent(
+                      `Hello Soul Space Infrastructure, I am reviewing ${currentTitle} (${currentLocation}) in your Project Feasibility Estimator and would like to receive the official quotation, unit availability, and schedule a site visit.`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 font-medium text-[#181715] hover:text-[#B8936D] transition-colors shrink-0"

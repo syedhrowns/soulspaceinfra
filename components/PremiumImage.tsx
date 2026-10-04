@@ -36,7 +36,7 @@ export function PremiumImage({
     return formattedSlotId ? getClientSavedImage(formattedSlotId) : null;
   });
 
-  // Listen for image updates in case an admin/user uploads them
+  // Synchronize when slot configuration updates
   useEffect(() => {
     if (!formattedSlotId) return;
 
@@ -89,10 +89,14 @@ export function PremiumImage({
       {/* Visual Slot - active image or dark architectural background with adaptive serial number */}
       {!hasValidSrc ? (
         <div className="absolute inset-0 flex items-center justify-center p-4 bg-[#181715] select-none pointer-events-none">
-          {formattedSlotId && (
-            <span className="font-mono text-[9px] sm:text-[11px] md:text-xs lowercase tracking-wider text-[#8C7E6D]/80">
+          {typeof window !== 'undefined' && window.location.pathname.startsWith('/admin') && formattedSlotId ? (
+            <span className="font-mono text-[9px] sm:text-[11px] md:text-xs lowercase tracking-wider text-[#C5A880]/80">
               {formattedSlotId}
             </span>
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-1 opacity-20">
+              <span className="font-serif text-[11px] italic tracking-widest text-[#C5A880]">SOUL SPACE</span>
+            </div>
           )}
         </div>
       ) : (
@@ -118,8 +122,8 @@ export function PremiumImage({
               }
             }}
             onLoad={handleDomLoad}
-            className={`w-full h-full ${effectiveFit} select-none transition-all duration-700 ease-out group-hover:scale-[1.015] ${
-              isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+            className={`w-full h-full ${effectiveFit} select-none transition-opacity duration-300 ease-out ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
             } ${className}`}
           />
         </>

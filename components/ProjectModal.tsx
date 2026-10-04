@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DynamicPictureSlot } from '@/components/DynamicPictureSlot';
-import { PremiumImage } from '@/components/PremiumImage';
 import { X, Compass, ArrowUpRight, CheckCircle2, Layers, ShieldCheck, ExternalLink, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SmoothAutoHeight } from '@/components/SmoothAutoHeight';
@@ -21,7 +21,11 @@ interface ProjectModalProps {
 export function ProjectModal({ project, onClose, onInquireTypology }: ProjectModalProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'overview' | 'blueprint' | 'materials'>('overview');
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Universal background scroll lock with Lenis pause & scrollbar compensation
   useScrollLock(!!project);
@@ -42,11 +46,9 @@ export function ProjectModal({ project, onClose, onInquireTypology }: ProjectMod
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  if (!project) return null;
+  if (!project || !mounted || typeof document === 'undefined') return null;
 
-  const allImages = [project.heroImage, ...project.galleryImages];
-
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -54,7 +56,7 @@ export function ProjectModal({ project, onClose, onInquireTypology }: ProjectMod
       transition={{ duration: 0.3 }}
       id="project-modal-backdrop"
       data-lenis-prevent
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-6 overflow-y-auto overscroll-contain"
+      className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-6 overflow-y-auto overscroll-contain"
       onClick={onClose}
     >
       <motion.div
@@ -96,41 +98,16 @@ export function ProjectModal({ project, onClose, onInquireTypology }: ProjectMod
 
           {/* Interactive Media Showcase */}
           <div>
-            <div className="relative w-full bg-[#181715] rounded-3xl overflow-hidden">
+            <div className="relative w-full bg-transparent rounded-2xl sm:rounded-3xl overflow-hidden">
               <DynamicPictureSlot
-                slotId={getProjectSlotId(project.id, activeImageIndex + 1)}
-                title={`${project.title} photographic view ${activeImageIndex + 1}`}
-                src={allImages[activeImageIndex]}
+                slotId={getProjectSlotId(project.id, 1)}
+                title={`${project.title} Architectural Showcase`}
+                src={project.heroImage}
                 orientation="landscape"
                 aspectHint="16:9"
+                isHero={true}
                 className="border-0 rounded-none w-full"
               />
-            </div>
-
-            {/* Thumbnail selector */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-3 mt-3">
-              {allImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveImageIndex(idx)}
-                  className={`relative aspect-[16/10] overflow-hidden rounded-2xl border transition-all cursor-pointer ${
-                    activeImageIndex === idx
-                      ? 'border-[#B8936D]'
-                      : 'border-[#E5DFD4] opacity-70 hover:opacity-100 bg-[#EFECE5] hover:border-[#B8936D]'
-                  }`}
-                  id={`thumbnail-${idx}`}
-                >
-                  <PremiumImage
-                    src={img}
-                    alt="Thumbnail preview"
-                    slotId={getProjectSlotId(project.id, idx + 1)}
-                    fill
-                    referrerPolicy="no-referrer"
-                    className="object-cover"
-                    containerClassName="w-full h-full"
-                  />
-                </button>
-              ))}
             </div>
           </div>
 
@@ -309,6 +286,7 @@ export function ProjectModal({ project, onClose, onInquireTypology }: ProjectMod
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 }

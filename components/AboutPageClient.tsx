@@ -161,7 +161,7 @@ export function AboutPageClient() {
       slotId: 'aurum_img_01',
       title: 'AURUM',
       tagline: 'A World of Luxury Awaits',
-      typology: '33 Luxury Villas',
+      typology: 'Independent Luxury Villas',
       location: 'Vilankurichi, Coimbatore',
       area: '2,132 – 3,012 Sq.Ft (198 – 280 m²)',
       summary:
@@ -180,7 +180,7 @@ export function AboutPageClient() {
       slotId: 'abvarbor_img_01',
       title: 'ABV ARBOR',
       tagline: 'Sign Up for an Unrivalled Home Experience',
-      typology: 'Luxury City Residences',
+      typology: 'Luxury Apartments',
       location: 'Ramanathapuram, Coimbatore',
       area: '2,395 Sq.Ft (222 m²)',
       summary:
@@ -218,7 +218,7 @@ export function AboutPageClient() {
       slotId: 'uptown_img_01',
       title: 'SOULSPACE UPTOWN',
       tagline: 'Luxury Space at an Unbeatable Price',
-      typology: 'Contemporary Living Apartments',
+      typology: 'Budget Apartments',
       location: 'Eachanari, Coimbatore',
       area: '1,450 Sq.Ft (135 m²)',
       summary:
@@ -237,7 +237,7 @@ export function AboutPageClient() {
       slotId: 'mystic_img_01',
       title: 'MYSTIC',
       tagline: 'Close to Nature, Near to Your World',
-      typology: 'Luxury Farmhouse & Gated Villas',
+      typology: 'Farmhouse Villas',
       location: 'Semmedu, Near Isha Adiyogi, Coimbatore',
       area: '2,500 Sq.Ft Farmhouse (22 Cents+)',
       summary:
@@ -257,7 +257,7 @@ export function AboutPageClient() {
       {/* Header: Matches project page header opacity, blur effect, and borderless design with smooth darkening across Portfolio Folio section */}
       <header
         id="about-navigation"
-        className={`sticky top-0 z-40 py-3 sm:py-4 transition-[background-color,backdrop-filter] duration-500 ease-out border-none ${
+        className={`sticky top-0 z-50 py-3 sm:py-4 transition-[background-color,backdrop-filter] duration-500 ease-out border-none ${
           isInFolioSection
             ? 'shadow-none'
             : hasScrolledPastTop
@@ -280,9 +280,9 @@ export function AboutPageClient() {
             : undefined
         }
       >
-        <div className="w-full px-4 sm:px-6 lg:px-8 grid grid-cols-3 items-center h-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-10">
           {/* Left Corner: Back to Home Arrow with scroll-direction blur effect */}
-          <div className="flex items-center justify-start">
+          <div className="flex items-center justify-start z-10">
             <Link
               href="/"
               className={`hover:text-[#B8936D] cursor-pointer inline-flex items-center justify-center p-2 sm:p-1 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 transition-all duration-500 ease-out ${
@@ -299,8 +299,8 @@ export function AboutPageClient() {
             </Link>
           </div>
 
-          {/* Center: BrandLogo scrolls to top of current page without taking user to landing page */}
-          <div className="flex items-center justify-center">
+          {/* Center: BrandLogo strictly centered relative to viewport */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -320,7 +320,7 @@ export function AboutPageClient() {
           </div>
 
           {/* Right: Empty spacer for strict center balance */}
-          <div className="flex items-center justify-end" />
+          <div className="w-6 sm:w-8 pointer-events-none" />
         </div>
       </header>
 
@@ -348,13 +348,13 @@ export function AboutPageClient() {
             </h1>
 
             {/* Tagline — Strictly on one single line on desktop, gracefully responsive on mobile */}
-            <p className="font-serif text-xs sm:text-2xl text-[#8C7A65] text-center mx-auto mb-4 sm:mb-5 font-light whitespace-normal sm:whitespace-nowrap max-w-none w-full px-2 sm:px-0">
-              Quality, Functionality &amp; Enduring Value across Coimbatore, Tamil Nadu.
+            <p className="font-serif text-[clamp(13px,2vw,22px)] text-[#8C7A65] text-center mx-auto mb-4 sm:mb-5 font-light whitespace-normal md:whitespace-nowrap max-w-none w-full px-2 sm:px-0">
+              Quality, Functionality <span className="italic font-normal text-[#B8936D]">&amp; Enduring Value</span> across Coimbatore, Tamil Nadu.
             </p>
 
             {/* Lead Narrative — Elegantly proportioned on mobile, 2 to 3 lines on desktop */}
             <p className="text-[11px] sm:text-base text-[#575046] max-w-3xl leading-normal sm:leading-relaxed font-light text-center mx-auto mb-5 sm:mb-7 px-4">
-              Since 2016, <strong>Soulspace Infrastructure</strong> delivers luxury villas, contemporary apartments, column-free commercial IT suites, and biophilic nature retreats across Coimbatore with uncompromised engineering rigor.
+              Since 2016, <strong>Soulspace Infrastructure</strong> delivers Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas across Coimbatore with uncompromised engineering rigor.
             </p>
 
             {/* Centered Actions: View Portfolio Folio button with Practice Timeline below it without layout */}
@@ -605,7 +605,7 @@ export function AboutPageClient() {
               Five Signature Commissions.
             </h2>
             <p className="text-xs sm:text-sm text-[#A69B8D] max-w-2xl leading-relaxed font-light">
-              An architectural showcase across residential enclaves, boutique city flats, tech commercial suites, and biophilic nature retreats in Coimbatore.
+              An architectural showcase across Independent Luxury Villas, Luxury Apartments, Budget Apartments, Commercial Workspaces, and Farmhouse Villas in Coimbatore.
             </p>
           </ScrollReveal>
 
@@ -619,10 +619,10 @@ export function AboutPageClient() {
                   yOffset={28}
                   className="bg-[#201E1B] border border-[#332F2A] rounded-2xl overflow-hidden hover:border-[#B8936D]/60 transition-all duration-300 shadow-none"
                 >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 items-center min-w-0">
                     {/* Visual Column with Dynamic Picture Slot (7 Cols) */}
                     <div
-                      className={`lg:col-span-7 p-4 sm:p-6 lg:p-8 flex flex-col justify-center ${
+                      className={`lg:col-span-7 min-w-0 p-4 sm:p-6 lg:p-8 flex flex-col justify-center ${
                         isEven ? 'lg:order-1' : 'lg:order-2'
                       }`}
                     >
@@ -633,29 +633,29 @@ export function AboutPageClient() {
                         aspectHint="Cinematic Landscape (16:9)"
                         orientation="landscape"
                         priority={idx === 0}
-                        className="border-[#332F2A] hover:border-[#B8936D]/60"
+                        isHero={true}
                       />
                     </div>
 
                     {/* Editorial Data Column (5 Cols) — Aligned in middle */}
                     <div
-                      className={`lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-center items-center text-center my-auto border-t lg:border-t-0 ${
+                      className={`lg:col-span-5 min-w-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-center items-center lg:items-start text-center lg:text-left my-auto border-t lg:border-t-0 ${
                         isEven
                           ? 'lg:order-2 lg:border-l border-[#2D2A26]'
                           : 'lg:order-1 lg:border-r border-[#2D2A26]'
                       }`}
                     >
-                      <div className="flex flex-col items-center justify-center text-center w-full max-w-md mx-auto my-auto">
+                      <div className="flex flex-col items-center lg:items-start justify-center text-center lg:text-left w-full max-w-md mx-auto lg:mx-0 my-auto">
                         {/* Title & Tagline */}
-                        <h3 className="font-serif text-2xl sm:text-4xl text-white font-normal mb-2 tracking-tight text-center">
+                        <h3 className="font-serif text-2xl sm:text-4xl text-white font-normal mb-2 tracking-tight text-center lg:text-left">
                           {proj.title}
                         </h3>
-                        <p className="font-serif text-xs sm:text-sm text-[#B8936D] italic mb-4 font-light text-center">
+                        <p className="font-serif text-xs sm:text-sm text-[#B8936D] italic mb-4 font-light text-center lg:text-left">
                           {proj.tagline}
                         </p>
 
                         {/* Location & Specs */}
-                        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-[#A69B8D] mb-5 text-center">
+                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs text-[#A69B8D] mb-5 text-center lg:text-left">
                           <div className="flex items-center gap-1.5">
                             <MapPin className="w-3.5 h-3.5 text-[#B8936D] shrink-0" />
                             <span>{proj.location}</span>
@@ -668,15 +668,15 @@ export function AboutPageClient() {
                         </div>
 
                         {/* Summary */}
-                        <p className="text-xs sm:text-[13px] text-[#C4BCB0] leading-relaxed font-light mb-6 text-center">
+                        <p className="text-xs sm:text-[13px] text-[#C4BCB0] leading-relaxed font-light mb-6 text-center lg:text-left">
                           {proj.summary}
                         </p>
 
                         {/* Detail Exploration Link */}
-                        <div className="pt-2 w-full flex justify-center">
+                        <div className="pt-2 w-full flex justify-center lg:justify-start">
                           <Link
                             href={proj.link}
-                            className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto py-3 px-7 rounded-full bg-[#FAF8F5] text-[#181714] text-xs font-sans tracking-[0.16em] uppercase font-semibold hover:bg-white transition-colors duration-200 shadow-none"
+                            className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto py-2.5 sm:py-3 px-6 sm:px-7 rounded-full bg-[#FAF8F5] text-[#181714] text-[11px] sm:text-xs font-sans tracking-[0.16em] uppercase font-semibold hover:bg-white transition-colors duration-200 shadow-none border border-transparent"
                           >
                             <span>Explore Project Details</span>
                             <ArrowUpRight className="w-4 h-4 text-[#B8936D]" />

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   FileText,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { FullProjectDetail } from '@/data/projectDataFull';
+import { getProjectCustomData } from '@/lib/projectContent';
 
 interface ProjectBrochureSectionProps {
   project: FullProjectDetail;
@@ -23,9 +24,25 @@ export function ProjectBrochureSection({ project }: ProjectBrochureSectionProps)
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
-  if (!project.brochurePdfUrl) return null;
+  const [activeBrochureUrl, setActiveBrochureUrl] = useState<string | null>(() => {
+    return getProjectCustomData(project.id).brochureUrl || project.brochurePdfUrl || null;
+  });
 
-  const rawUrl = project.brochurePdfUrl;
+  useEffect(() => {
+    const custom = getProjectCustomData(project.id).brochureUrl;
+    if (custom) setActiveBrochureUrl(custom);
+
+    const handleUpdate = () => {
+      const updated = getProjectCustomData(project.id).brochureUrl;
+      setActiveBrochureUrl(updated || project.brochurePdfUrl || null);
+    };
+    window.addEventListener('soulspace-content-updated', handleUpdate);
+    return () => window.removeEventListener('soulspace-content-updated', handleUpdate);
+  }, [project.id, project.brochurePdfUrl]);
+
+  if (!activeBrochureUrl) return null;
+
+  const rawUrl = activeBrochureUrl;
   // Cloudinary fl_attachment flag guarantees an immediate Content-Disposition: attachment header
   const attachmentUrl = rawUrl.includes('/upload/')
     ? rawUrl.replace('/upload/', '/upload/fl_attachment/')

@@ -56,12 +56,38 @@ export default function LeafletMapInner({
 
       mapInstanceRef.current = map;
 
-      // Add Clean Warm Architectural Map Tiles (OpenStreetMap + Warm Filter)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Add Clean Warm Architectural Map Tiles (OpenStreetMap with high-fidelity roads & labels)
+      const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        className: 'architectural-map-tiles',
         subdomains: 'abc',
-      }).addTo(map);
+        className: 'architectural-map-tiles',
+      });
+      tileLayer.addTo(map);
+
+      // Fit bounds to all project coordinates with balanced padding so Marker 05 (Eachanari) & others are never cut off
+      const latLngs = locations.map((loc) => loc.coordinates);
+      const bounds = L.latLngBounds(latLngs);
+      map.fitBounds(bounds, {
+        padding: isTouchDevice ? [28, 28] : [52, 52],
+        maxZoom: 13,
+      });
+
+      // Crucial: Invalidate size after layout stabilization to eliminate any white square / blank tile glitch
+      const timer1 = setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 150);
+
+      const timer2 = setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+          mapInstanceRef.current.fitBounds(bounds, {
+            padding: isTouchDevice ? [28, 28] : [52, 52],
+            maxZoom: 13,
+          });
+        }
+      }, 500);
 
       // Create Markers
       locations.forEach((loc, index) => {
@@ -112,18 +138,33 @@ export default function LeafletMapInner({
 
         markersRef.current[loc.id] = marker;
       });
+
+      const handleResize = () => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      };
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        window.removeEventListener('resize', handleResize);
+      };
     }
 
-    initMap();
+    const cleanupInit = initMap();
 
     return () => {
       isMounted = false;
+      cleanupInit.then((clean) => {
+        if (typeof clean === 'function') clean();
+      });
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update map pan and marker active state when selectedLocationId changes
@@ -148,8 +189,17 @@ export default function LeafletMapInner({
     mapInstanceRef.current?.zoomOut();
   };
 
-  const handleResetView = () => {
-    mapInstanceRef.current?.flyTo(COIMBATORE_CENTER, DEFAULT_ZOOM, { duration: 1.2 });
+  const handleResetView = async () => {
+    if (!mapInstanceRef.current) return;
+    const leafletModule = await import('leaflet');
+    const L = leafletModule.default || leafletModule;
+    const latLngs = locations.map((loc) => loc.coordinates);
+    const bounds = L.latLngBounds(latLngs);
+    mapInstanceRef.current.flyToBounds(bounds, {
+      padding: isMobile ? [28, 28] : [52, 52],
+      maxZoom: 13,
+      duration: 1.0,
+    });
   };
 
   const handleTogglePan = () => {

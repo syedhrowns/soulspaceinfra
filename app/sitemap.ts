@@ -1,8 +1,6 @@
 import { MetadataRoute } from 'next';
 import { PROJECTS } from '@/data/projects';
 
-export const dynamic = 'force-static';
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://soulspaceinfra.com';
   const currentDate = new Date().toISOString();

@@ -7,7 +7,6 @@ import { PROJECTS } from '@/data/projects';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { DynamicPictureSlot } from '@/components/DynamicPictureSlot';
 import { getProjectSlotId } from '@/lib/slots';
-import { BrandLogo } from '@/components/BrandLogo';
 
 interface IdentityBannerProps {
   onOpenProject: (projectId: string) => void;
@@ -29,34 +28,23 @@ export function IdentityBanner({ onOpenProject }: IdentityBannerProps) {
         <ScrollReveal 
           className="flex flex-col items-center text-center mb-6 sm:mb-8"
         >
-          {/* Main Brand Lockup */}
-          <div className="flex justify-center">
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  if ((window as any).__lenis) {
-                    (window as any).__lenis.scrollTo(0, { duration: 1.2 });
-                  } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
-                }
-              }}
-              className="cursor-pointer focus:outline-hidden hover:opacity-90 transition-opacity flex items-center justify-center"
-              aria-label="Scroll to top of current page"
-              id="banner-brand-logo-link"
-            >
-              <BrandLogo variant="banner" />
-            </button>
+          <div className="flex items-center justify-center gap-2 text-[#B8936D] text-[9.5px] sm:text-[10px] tracking-[0.3em] uppercase font-bold mb-2 sm:mb-3 font-sans">
+            <span className="w-3 h-px bg-[#B8936D]" />
+            <span>INTERACTIVE PORTFOLIO SHOWCASE</span>
+            <span className="w-3 h-px bg-[#B8936D]" />
           </div>
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#181715] font-normal tracking-[-0.02em]">
+            Signature Developments
+          </h2>
         </ScrollReveal>
 
         {/* Compact, Full-Viewport Architectural Canvas Card with Pure Glass Blur */}
         <ScrollReveal
           delay={0.15}
-          className="bg-[#FAF8F5]/30 backdrop-blur-2xl border border-[#E5DFD4]/60 rounded-xl shadow-none p-4 sm:p-8 lg:p-10 relative overflow-hidden flex flex-col items-center"
+          className="bg-[#FAF8F5]/50 backdrop-blur-2xl border border-[#E5DFD4]/80 rounded-2xl shadow-none p-3.5 sm:p-8 lg:p-10 relative overflow-hidden flex flex-col items-center"
         >
-          {/* Main Visual Stage - Dynamic Adaptive Slot */}
-          <div className="relative w-full rounded-lg overflow-hidden bg-[#181715] group">
+          {/* Main Visual Stage - Dynamic Adaptive Slot with Zero Letterboxing */}
+          <div className="relative w-full rounded-xl overflow-hidden bg-transparent group">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentProject.id}
@@ -70,10 +58,9 @@ export function IdentityBanner({ onOpenProject }: IdentityBannerProps) {
                   slotId={getProjectSlotId(currentProject.id, 1)}
                   title={currentProject.title}
                   src={currentProject.heroImage}
-                  orientation="wide"
-                  aspectHint="21:9"
+                  orientation="landscape"
                   priority
-                  className="border-0 rounded-none w-full"
+                  className="border-0 rounded-xl w-full"
                 />
               </motion.div>
             </AnimatePresence>
@@ -101,21 +88,21 @@ export function IdentityBanner({ onOpenProject }: IdentityBannerProps) {
           </div>
 
           {/* Integrated Quick Switcher Bar with Warm Linen Tone */}
-          <div className="w-full mt-4 px-4 py-3 sm:px-6 sm:py-3.5 bg-[#FAF8F4] border border-[#E5DFD4] rounded-lg sm:rounded-full flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="w-full mt-4 px-3.5 py-3 sm:px-6 sm:py-3.5 bg-[#FAF8F4] border border-[#E5DFD4] rounded-xl sm:rounded-full flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-sans text-[#7A7061] uppercase tracking-wider shrink-0">
               <Compass className="w-3.5 h-3.5 text-[#B8936D]" />
-              <span className="hidden md:inline">FLAGSHIP DEVELOPMENTS:</span>
+              <span>FLAGSHIP DEVELOPMENTS</span>
             </div>
 
-            {/* Fast 4-Project Switch Pills */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+            {/* Fast 5-Project Switch Pills — Balanced Flex Wrap */}
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-1.5 sm:gap-2 w-full sm:w-auto">
               {showcaseProjects.map((project, idx) => {
                 const isActive = selectedProjectIndex === idx;
                 return (
                   <button
                     key={project.id}
                     onClick={() => setSelectedProjectIndex(idx)}
-                    className={`px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-sans tracking-wider uppercase transition-all cursor-pointer text-center sm:text-left truncate border ${
+                    className={`px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-sans tracking-wider uppercase transition-all cursor-pointer text-center truncate border ${
                       isActive
                         ? 'bg-[#181715] text-white border-[#2B2723] hover:border-[#CBB8A0]'
                         : 'bg-[#EDE7DC] text-[#4A4338] border-[#D9D1C3] hover:border-[#CBB8A0]'
